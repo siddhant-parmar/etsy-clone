@@ -11,20 +11,23 @@ using React and Node. Refer to the Etsy website and see how it functions.
 - Log out
 
 ### A User should be able to do the following functionalities:
-Profile Page/ Favorites Page- Basic:
-1. The “Favorite Items” section should be displayed as in Etsy.
-2. Edit button should take the user to update the profile page.
-3. Users should be able to perform a name search on their favourite items.
-Profile Page - Update:
-1. Display complete profile of a customer (basic details, about, profile picture)
-2. Upload profile picture
-3. Update basic details (name, date of birth, city)
-4. Update Contact Information (email id, phone number)
-5. Full address ( mandatory )
-6. The country should be a dropdown with the list of countries to select from and should not
+
+#### Profile Page/ Favorites Page- Basic:
+- The “Favorite Items” section should be displayed as in Etsy.
+- Edit button should take the user to update the profile page.
+- Users should be able to perform a name search on their favourite items.
+
+#### Profile Page - Update:
+- Display complete profile of a customer (basic details, about, profile picture)
+- Upload profile picture
+- Update basic details (name, date of birth, city)
+- Update Contact Information (email id, phone number)
+- Full address ( mandatory )
+- The country should be a dropdown with the list of countries to select from and should not
 be entered manually.
-Sell on Etsy Page - First time:
-1. Collect name of the shop which must be unique and its availability can be checked
+
+#### Sell on Etsy Page - First time:
+- Collect name of the shop which must be unique and its availability can be checked
 by the button beside it.
 Once the shop is named, the user should be redirected to the shop home page,
 Shop Home Page:
