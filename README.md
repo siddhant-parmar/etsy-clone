@@ -1,43 +1,33 @@
-# etsy-clone
-## CMPE 273 - Lab 1 Assignment: Using REST (NodeJS) and ReactJS
+# CMPE 273 - Lab 1 Assignment: Using REST (NodeJS) and ReactJS
 
-CMPE 273: Enterprise Distributed Systems
-Lab 1 Assignment: Using REST (Node.js) and React JS
-Due: 03/11/2022 11:59 PM
 This lab assignment covers developing REST services using Node.js (Express) and ReactJS.
-This lab assignment is graded based on 30 points and is an individual effort (Teamwork not
-allowed)
-Prerequisite
-● You should be able to run the basic node.js and React applications discussed in class.
-● You must know programming languages, JavaScript.
-Grading
-Etsy Application - 30 marks
-Questions – 5 marks
-Total – 35 marks
-Note: Late assignments will be accepted but will be subject to a penalty of -5 points per day
-late. Submissions received at or before the class on the due date can receive a maximum.
-Etsy
+
 You need to develop a “Prototype of Etsy application”. This prototype will be a web application
 using React and Node. Refer to the Etsy website and see how it functions.
-You need to implement the following features in your application.
-1. Signup (name, email id, password)
-2. log in
-3. log out
-A User should be able to do the following functionalities:
-Profile Page/ Favorites Page- Basic:
-1. The “Favorite Items” section should be displayed as in Etsy.
-2. Edit button should take the user to update the profile page.
-3. Users should be able to perform a name search on their favourite items.
-Profile Page - Update:
-1. Display complete profile of a customer (basic details, about, profile picture)
-2. Upload profile picture
-3. Update basic details (name, date of birth, city)
-4. Update Contact Information (email id, phone number)
-5. Full address ( mandatory )
-6. The country should be a dropdown with the list of countries to select from and should not
+
+### You need to implement the following features in your application.
+- Signup (name, email id, password)
+- Log in
+- Log out
+
+### A User should be able to do the following functionalities:
+
+#### Profile Page/ Favorites Page- Basic:
+- The “Favorite Items” section should be displayed as in Etsy.
+- Edit button should take the user to update the profile page.
+- Users should be able to perform a name search on their favourite items.
+
+#### Profile Page - Update:
+- Display complete profile of a customer (basic details, about, profile picture)
+- Upload profile picture
+- Update basic details (name, date of birth, city)
+- Update Contact Information (email id, phone number)
+- Full address ( mandatory )
+- The country should be a dropdown with the list of countries to select from and should not
 be entered manually.
-Sell on Etsy Page - First time:
-1. Collect name of the shop which must be unique and its availability can be checked
+
+#### Sell on Etsy Page - First time:
+- Collect name of the shop which must be unique and its availability can be checked
 by the button beside it.
 Once the shop is named, the user should be redirected to the shop home page,
 Shop Home Page:
