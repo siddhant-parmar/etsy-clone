@@ -1,29 +1,16 @@
-# etsy-clone
-## CMPE 273 - Lab 1 Assignment: Using REST (NodeJS) and ReactJS
+# CMPE 273 - Lab 1 Assignment: Using REST (NodeJS) and ReactJS
 
-CMPE 273: Enterprise Distributed Systems
-Lab 1 Assignment: Using REST (Node.js) and React JS
-Due: 03/11/2022 11:59 PM
 This lab assignment covers developing REST services using Node.js (Express) and ReactJS.
-This lab assignment is graded based on 30 points and is an individual effort (Teamwork not
-allowed)
-Prerequisite
-● You should be able to run the basic node.js and React applications discussed in class.
-● You must know programming languages, JavaScript.
-Grading
-Etsy Application - 30 marks
-Questions – 5 marks
-Total – 35 marks
-Note: Late assignments will be accepted but will be subject to a penalty of -5 points per day
-late. Submissions received at or before the class on the due date can receive a maximum.
-Etsy
+
 You need to develop a “Prototype of Etsy application”. This prototype will be a web application
 using React and Node. Refer to the Etsy website and see how it functions.
-You need to implement the following features in your application.
-1. Signup (name, email id, password)
-2. log in
-3. log out
-A User should be able to do the following functionalities:
+
+### You need to implement the following features in your application.
+- Signup (name, email id, password)
+- Log in
+- Log out
+
+### A User should be able to do the following functionalities:
 Profile Page/ Favorites Page- Basic:
 1. The “Favorite Items” section should be displayed as in Etsy.
 2. Edit button should take the user to update the profile page.
