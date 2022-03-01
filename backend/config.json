@@ -1,0 +1,10 @@
+{
+    "DB": {
+        "host":"etsy-database.cmrr60sg9okd.us-east-1.rds.amazonaws.com",
+        "username":"admin",
+        "password":"password",
+        "port":3306,
+        "database":"etsy-schema"
+    },
+    "frontend":"http://localhost:3000"
+}
