@@ -3,9 +3,16 @@ var cors = require('cors');
 var mysql = require('mysql');
 const router = express.Router();
 
-var app = express();
-
+const app = express();
 var dbdata = require("./config.json");
+
+app.get('/', (req, res) => {
+    res.send('Server is ready');
+});
+
+app.listen(8000, () => {
+    console.log("NodeJS server running!");
+});
 
 app.use(cors({ origin:dbdata.frontend, credentials:true }));
 
@@ -23,3 +30,5 @@ connection.getConnection((err) => {
     }
     console.log("pool created");
 });
+
+app.get('/login', (req, res) => {});
