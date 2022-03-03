@@ -1,56 +1,196 @@
+import {Form,Button} from 'react-bootstrap';
 import React, { Component } from 'react';
+import axios from 'axios';
+import cookie from 'react-cookies';
+import { Redirect } from 'react-router';
+// import Header from '../Header/Header';
+
+class Signup extends Component{
+    
+    constructor(){
+        super();
+        this.state = {
+            Email: "",
+            Fname: "",
+            Password: "",
+            validationError: true,
+        }
+    }
+
+    emailHandler = (e) => {
+        this.setState({
+            Email: e.target.value
+        })
+    }
+
+    fnameHandler = (e) => {
+        this.setState({
+            Fname: e.target.value
+        })
+        
+    }
+
+    passwordHandler = (e) => {
+        this.setState({
+            Password: e.target.value
+        })
+        
+    }
+
+    loginSubmit = (e) =>{
+        // e.preventDefault();
+        var cred = {
+            Email: this.state.Email,
+            Fname: this.state.Fname,
+            Password: this.state.Password
+        }
+        console.log(cred);
+
+        // axios.defaults.withCredentials = true;
 
 
-class Signup extends Component {
-    render() {
-        return (
+        axios.post('http://localhost:8000/signup', cred);
+
+        // .then((response) => {
+        //     if (response.status === 200) {
+        //         this.setState({
+        //             isValidationFailure: true,
+        //             formValidationFailure: false
+        //         })
+        //     }
+
+        // }).catch((err) => {
+        //     if (err) {
+        //         if (err.response.status === 401) {
+        //             this.setState({
+        //                 isValidationFailure: false
+        //             })
+        //             console.log("Error messagw", err.response.status);
+        //         }
+        //         else {
+        //             this.setState({
+        //                 errorRedirect: true
+        //             })
+        //         }
+        //     }
+
+        // });
+    }
+    
+    render(){
+
+
+        let errorAlert = null;
+        if(this.state.validationError){
+            errorAlert = 
             <div>
-                <div className="container fill-graywhite">
-                    <div className="container content">
-                        <div className="login-container">
-                            <div>
-                                <p>Log in to HomeAway</p>
-                                <p>Need an account? <a href="/sign-up">Sign Up</a></p>
-                            </div>
-                            <div>
-                                <p>Need an Owner account? <a href="/owner-sign-up">Owner Sign Up</a></p>
-                            </div>
-                            <div className="login-form-container col-lg-4 col-md-4 col-sm-12 offset-lg-4 offset-md-4 border">
-                                <div className="login-form-heading input-group pad-top-10 input-group-lg">
-                                    Account login
-                            </div>
-                                <hr />
-                                <div className="form-group login-form-control">
-                                    <input type="text" name="email" id="email" className="form-control form-control-lg" placeholder="Email Address" onChange={this.emailChangeHandler} required />
-                                </div>
-                                <div className="form-group login-form-control">
-                                    <input type="password" name="password" id="password" className="form-control form-control-lg" placeholder="Password" onChange={this.passwordChangeHandler} required />
-                                </div>
-                                <div className="form-group login-form-control">
-                                    <a href="" className="">Forgot Password?</a>
-                                </div>
-                                <div className="form-group login-form-control">
-                                    <button className="btn btn-login col-lg-12 col-md-12 col-sm-12" onClick={this.submitLogin} >Login </button>
-                                </div>
-                                <hr />
-                                <div className="form-group login-form-control">
-                                    <button className="btn fb-btn col-lg-12 col-md-12 col-sm-12">
-                                        <img className="fb-logo flt-left" alt="fb-logo"></img>
-                                        Log in with Facebook</button>
-                                </div>
-                                <div className="form-group login-form-control">
-                                    <button className="btn google-btn col-lg-12 col-md-12 col-sm-12">
-                                        <span><img className="google-logo flt-left" alt="google-logo"></img></span>
-                                        Log in with Google</button>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
+                <div className="alert alert-danger" role="alert">
+                    <strong>Sorry, the email you have entered is already in use.</strong>
                 </div>
             </div>
+        }   
+
+        let passAlert = null;
+        if(this.state.Password.length < 6 && this.state.Password != ""){
+            passAlert = 
+            <div>
+                <div className="alert alert-danger" role="alert">
+                    <strong>Must be at least 6 characters.</strong>
+                </div>
+            </div>
+        }  
+
+        return(
+            <Form>
+                <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <Form.Label>Email address</Form.Label>
+                    <Form.Control id = "email" type="text" onChange = {this.emailHandler} />
+                    <Form.Text className="text-muted">
+                    </Form.Text>
+                </Form.Group>
+                {errorAlert}
+                <Form.Group className="mb-3" controlId="formBasicPassword">
+                    <Form.Label>First Name</Form.Label>
+                    <Form.Control id = "fname" type = "text" onChange={this.fnameHandler} />
+                </Form.Group>
+
+                <Form.Group className="mb-3" controlId="formBasicPassword">
+                    <Form.Label>Password</Form.Label>
+                    <Form.Control id = "password" type = "password" onChange={this.passwordHandler} />
+                </Form.Group>
+                
+                <Button variant="primary" type="submit" onClick = {this.loginSubmit}>
+                    Register
+                </Button>
+            </Form>
         )
     }
+    
 }
-
 export default Signup;
+
+
+
+// import React from "react";
+// import { Form, Button } from "react-bootstrap";
+// import axios from 'axios';
+
+
+// const Login = () => {
+//   const [formValue, setformValue] = React.useState({
+//     email: "",
+//     password: "",
+//   });
+
+//   const handleSubmit = (event) => {
+//     var data = {
+//         Email: formValue.email,
+//         Password: formValue.password
+//     }
+
+    
+//     axios.post('http://localhost:8000/login', data).then((response) => {
+//         if (response.status === 200) {
+            
+//         }
+
+//     });
+//   };
+
+//   const handleChange = (event) => {
+//     setformValue({
+//       ...formValue,
+//       [event.target.name]: event.target.value,
+//     });
+//   };
+//   return (
+//     <Form>
+//       <Form.Group className="mb-3" controlId="formBasicEmail">
+//         <Form.Label>Email address</Form.Label>
+//         <Form.Control
+//           type="text"
+//           name="email"
+//           placeholder="Enter email"
+//           value={formValue.email}
+//           onChange={handleChange}
+//           required
+//         />
+//       </Form.Group>
+//       <Form.Group className="mb-3" controlId="formBasicPassword">
+//         <Form.Label>Password</Form.Label>
+//         <Form.Control
+//           type="password"
+//           name="password"
+//           placeholder="Password"
+//           value={formValue.password}
+//           onChange={handleChange}
+//           required
+//         />
+//       </Form.Group>
+//       <Button variant="primary" type="submit" onClick={handleSubmit}>
+//         Login
+//       </Button>
+//     </Form>
+//   );
+// };
+// export default Login;

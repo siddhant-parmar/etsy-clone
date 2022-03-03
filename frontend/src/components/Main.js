@@ -11,8 +11,8 @@ class Main extends Component{
         <BrowserRouter>
           <Routes>
             <Route exact path="/home" element = {<Home />}/>
-            {/* <Route  path="/signup" element = {<Signup />}/>
-            <Route  path="/login" element = {<Login />}/> */}
+            <Route  path="/signup" element = {<Signup />}/>
+            <Route  path="/login" element = {<Login />}/>
           </Routes>
         </BrowserRouter>
             </div>

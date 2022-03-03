@@ -11,7 +11,8 @@ class Login extends Component{
         super();
         this.state = {
             Email: "",
-            Password: ""
+            Password: "",
+            validationError: true
         }
     }
 
@@ -29,7 +30,7 @@ class Login extends Component{
     }
 
     loginSubmit = (e) =>{
-        e.preventDefault();
+        // e.preventDefault();
         var cred = {
             Email: this.state.Email,
             Password: this.state.Password
@@ -68,20 +69,31 @@ class Login extends Component{
     }
     
     render(){
+
+        let passAlert = null;
+        if(this.state.validationError){
+            passAlert = 
+            <div>
+                <div className="alert alert-danger" role="alert">
+                    <strong>Password was incorrect</strong>
+                </div>
+            </div>
+        }  
+
         return(
             <Form>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                     <Form.Label>Email address</Form.Label>
-                    <Form.Control id = "email" type="text" placeholder="Enter email" onChange = {this.emailHandler} />
+                    <Form.Control id = "email" type="text" onChange = {this.emailHandler} />
                     <Form.Text className="text-muted">
-                    We'll never share your email with anyone else.
                     </Form.Text>
                 </Form.Group>
-    
+            
                 <Form.Group className="mb-3" controlId="formBasicPassword">
                     <Form.Label>Password</Form.Label>
-                    <Form.Control id = "password" type="password" placeholder="Password" onChange={this.passwordHandler} />
+                    <Form.Control id = "password" type="password" onChange={this.passwordHandler} />
                 </Form.Group>
+                {passAlert}
                 <Button variant="primary" type="submit" onClick = {this.loginSubmit}>
                     Submit
                 </Button>

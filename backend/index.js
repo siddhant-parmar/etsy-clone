@@ -70,7 +70,7 @@ app.post('/login', function (req, res) {
                     res.end('Invalid Credentials!1');
                 }
                 else {
-                    if (result.length == 0 || req.body.Password != result[0].password) {
+                    if (result.length == 0 || req.body.Password != result[0].Password) {
                         res.writeHead(401, {
                             'Content-type': 'text/plain'
                         })
@@ -98,6 +98,57 @@ app.post('/login', function (req, res) {
                         res.end('Login successful!');
                     }
 
+                }
+            });
+        }
+    });
+});
+
+app.post('/signup', function (req, res){
+
+    console.log('Inside signup POST');
+
+    // BodyParser(req.body)
+
+    console.log('Request Body: ', req.body);
+
+    //Query
+
+    connection.getConnection(function (err, conn) {
+        if (err) {
+            console.log('Error in creating connection!');
+            res.writeHead(400, {
+                'Content-type': 'text/plain'
+            });
+            res.end('Error in creating connection!');
+        }
+        else {
+
+            //Login validation query
+            var sql = "INSERT INTO login_credentials (Email, Name, Password) VALUES (" + mysql.escape(req.body.Email) + ", " + mysql.escape(req.body.Fname) + ", " + mysql.escape(req.body.Password) + ");";
+
+            conn.query(sql, function (err, result) {
+                if (err) {
+                    res.writeHead(400, {
+                        'Content-Type': 'text/plain'
+                    });
+                    res.end('ERROR');
+                }
+                else{
+                    if (result.length == 0 || req.body.Email != result[0].Email) {
+                        res.writeHead(401, {
+                            'Content-type': 'text/plain'
+                        })
+                        console.log(result[0]);
+                        console.log('Invalid Credentials!2');
+                        res.end('Invalid Credentials!3');
+                    }
+                    else{
+                        res.writeHead(200, {
+                            'Content-type': 'text/plain'
+                        })
+                        console.log(result[0]);
+                    }
                 }
             });
         }
