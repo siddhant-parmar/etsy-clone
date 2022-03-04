@@ -3,8 +3,6 @@ var cors = require('cors');
 var mysql = require('mysql');
 const router = express.Router();
 
-// import { BodyParser } from 'body-parser';
-
 const app = express();
 var dbdata = require("./config.json");
 const bodyParser = require('body-parser');
@@ -18,11 +16,12 @@ app.listen(8000, () => {
 });
 
 app.use(bodyParser.json());
-app.use(cors({ origin:dbdata.frontend, credentials:true }));
-// app.use(function(req, res, next) {
-//     res.header("Access-Control-Allow-Origin: http://localhost:3000");
-//     next();
-//   });
+app.use(cors({ origin:dbdata.frontEnd, credentials:true }));
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
 
 var connection = mysql.createPool({
     host: dbdata.DB.host,
@@ -42,9 +41,6 @@ connection.getConnection((err) => {
 app.post('/login', function (req, res) {
 
     console.log('Inside login POST');
-
-    // BodyParser(req.body)
-
     console.log('Request Body: ', req.body);
 
     //Query
@@ -60,36 +56,35 @@ app.post('/login', function (req, res) {
         else {
 
             //Login validation query
-            var sql = 'SELECT * from login_credentials WHERE username = ' + mysql.escape(req.body.Email);
+            var sql = 'SELECT * from login_credentials WHERE Email = ' + mysql.escape(req.body.Email);
             conn.query(sql, function (err, result) {
 
                 if (err) {
                     res.writeHead(400, {
                         'Content-Type': 'text/plain'
                     });
-                    res.end('Invalid Credentials!1');
+                    res.end('Invalid Credentials!');
                 }
                 else {
                     if (result.length == 0 || req.body.Password != result[0].Password) {
                         res.writeHead(401, {
                             'Content-type': 'text/plain'
                         })
-                        console.log(result[0]);
-                        console.log('Invalid Credentials!2');
-                        res.end('Invalid Credentials!3');
+                        console.log('Invalid Credentials!');
+                        res.end('Invalid Credentials!');
                     }
                     else {
                         console.log(result);
-                        // res.cookie('cookie', result[0].Firstname, {
-                        //     maxAge: 360000,
-                        //     httpOnly: false,
-                        //     path: '/'
-                        // });
-                        // res.cookie('Accounttype', result[0].Accounttype, {
-                        //     maxAge: 360000,
-                        //     httpOnly: false,
-                        //     path: '/'
-                        // });
+                        res.cookie('cookie', result[0].Firstname, {
+                            maxAge: 360000,
+                            httpOnly: false,
+                            path: '/'
+                        });
+                        res.cookie('Accounttype', result[0].Accounttype, {
+                            maxAge: 360000,
+                            httpOnly: false,
+                            path: '/'
+                        });
                         // req.session.user = result[0];
                         res.writeHead(200, {
                             'Content-type': 'text/plain'
@@ -125,7 +120,7 @@ app.post('/signup', function (req, res){
         else {
 
             //Login validation query
-            var sql = "INSERT INTO login_credentials (Email, Name, Password) VALUES (" + mysql.escape(req.body.Email) + ", " + mysql.escape(req.body.Fname) + ", " + mysql.escape(req.body.Password) + ");";
+            var sql = "INSERT INTO login_credentials (Email, Name, Password) VALUES (" + mysql.escape(req.body.Email) + ", " + mysql.escape(req.body.Name) + ", " + mysql.escape(req.body.Password) + ");";
 
             conn.query(sql, function (err, result) {
                 if (err) {

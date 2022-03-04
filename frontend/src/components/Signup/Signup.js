@@ -13,7 +13,8 @@ class Signup extends Component{
             Email: "",
             Fname: "",
             Password: "",
-            validationError: true,
+            validationError: false,
+            passwordValidation: false
         }
     }
 
@@ -46,6 +47,9 @@ class Signup extends Component{
         }
         console.log(cred);
 
+        if(this.state.Password < 6){
+            this.state.passwordValidation = true;
+        }
         // axios.defaults.withCredentials = true;
 
 
@@ -91,7 +95,7 @@ class Signup extends Component{
         }   
 
         let passAlert = null;
-        if(this.state.Password.length < 6 && this.state.Password != ""){
+        if(this.state.passwordValidation){
             passAlert = 
             <div>
                 <div className="alert alert-danger" role="alert">
@@ -118,7 +122,7 @@ class Signup extends Component{
                     <Form.Label>Password</Form.Label>
                     <Form.Control id = "password" type = "password" onChange={this.passwordHandler} />
                 </Form.Group>
-                
+                {passAlert}
                 <Button variant="primary" type="submit" onClick = {this.loginSubmit}>
                     Register
                 </Button>
