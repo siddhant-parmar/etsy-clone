@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Modal, Button } from "react-bootstrap";
-import LoginForm from "./login";
-import SignupForm from "./signup"
+import Login from "../Login/Login";
+import Signup from "../Signup/Signup";
 
 function LoginSignupButton() {
   const [showLogin, setShowLogin] = useState(false);
@@ -19,8 +19,7 @@ function LoginSignupButton() {
   return (
     <>
       <div>
-        <Button variant="outline-dark" size="sm" onClick={handleShowLogin}>
-          {" "}
+        <Button variant="outline-dark" size="lg" onClick={handleShowLogin}>
           Sign in
         </Button>
       </div>
@@ -28,18 +27,16 @@ function LoginSignupButton() {
       <Modal show={showLogin} onHide={handleCloseLogin}>
         <Modal.Header closeButton>
           <Modal.Title>
-            Login
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <Button variant="outline-dark" size="sm" onClick={handleShowSignup}>
+            Login &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+                  &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+            <Button variant="outline-dark" size="md" onClick={handleShowSignup}>
               {" "}
               Register
             </Button>
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <LoginForm />
+          <Login />
         </Modal.Body>
       </Modal>
 
@@ -51,7 +48,7 @@ function LoginSignupButton() {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <SignupForm />
+          <Signup />
         </Modal.Body>
       </Modal>
     </>

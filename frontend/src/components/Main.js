@@ -1,9 +1,12 @@
 import React, {Component} from 'react';
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
-import Login from './Login/Login';
+import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import Home from './Home/Home';
+import Login from './Login/Login';
 import Signup from './Signup/Signup';
 import Profile from './Profile/Profile';
+import NavBar from './NavBar/NavBar';
+import Cart from './Cart/Cart';
 
 class Main extends Component{
     render(){
@@ -11,11 +14,12 @@ class Main extends Component{
             <div>
         <BrowserRouter>
           <Routes>
-            <Route  path="/home" element = {<Home />}/>
-            <Route  path="/signup" element = {<Signup />}/>
-            <Route  path="/login" element = {<Login />}/>
-            <Route  path="/profile" element = {<Profile />}/>
-            <Route  path="/" element = {<Home />}/>
+            <Route  path = "/" element = {<NavBar />}/>
+            <Route  path = "/home" element = {<Home />}/>
+            <Route  path = "/signup" element = {<Signup />}/>
+            <Route  path = "/login" element = {<Login />}/>
+            <Route  path = "/profile" element = {<Profile />}/>
+            <Route path = "/cart" element = {<Cart />} />
           </Routes>
         </BrowserRouter>
             </div>

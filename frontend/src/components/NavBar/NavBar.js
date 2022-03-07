@@ -16,7 +16,7 @@ function NavBar() {
       <Navbar bg="light" expand="lg">
         <Container fluid>
           <Navbar.Brand href="#">
-            <h1 style={{ color: "#f1641d" }}>&nbsp;&nbsp;&nbsp; Etsy &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</h1>
+            <h1 style={{ color: "#f1641d" }}>&nbsp;&nbsp;&nbsp; Etsy</h1>
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="navbarScroll" />
           <Navbar.Collapse id="navbarScroll">
@@ -27,10 +27,11 @@ function NavBar() {
               //className="ml-auto"
             >
               <Form className="d-flex ms-auto">
+                
                 <FormControl
                   type="search"
                   placeholder="Search"
-                  className="form-control-lg me-2"
+                  className="form-control-lg rounded"
                   aria-label="Search"
                 />
                 <Button variant="outline-primary" size="sm">
@@ -47,10 +48,9 @@ function NavBar() {
                   {/* Search */}
                 </Button>
               </Form>
-              <Nav.Link className="border-left pl-2 ms-auto" href="#action1" >	
+              <Nav.Link className="border-left pl-2 ms-auto" href="#action1">
                 <LoginSignupButton />
               </Nav.Link>
-
               <Nav.Link href="#action2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
