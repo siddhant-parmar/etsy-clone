@@ -11,9 +11,9 @@ const Signup = () => {
 
   const handleSubmit = (event) => {
     var data = {
-      Email: formValue.email,
-      Password: formValue.password,
-      Name: formValue.name,
+      email: formValue.email,
+      password: formValue.password,
+      name: formValue.name,
     };
     axios.post("http://localhost:8000/signup", data).then((response) => {
       if (response.status === 200) {

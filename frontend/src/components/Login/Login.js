@@ -11,14 +11,14 @@ const Login = () => {
 
   const handleSubmit = (event) => {
     var data = {
-        Email: formValue.email,
-        Password: formValue.password
+        email: formValue.email,
+        password: formValue.password
     }
     axios.post('http://localhost:8000/login', data).then((response) => {
         if (response.status === 200) {
           console.log()
         }
-
+        
     });
   };
 

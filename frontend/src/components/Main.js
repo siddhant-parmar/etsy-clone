@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import axios from 'axios';
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import Home from './Home/Home';
@@ -7,9 +8,11 @@ import Signup from './Signup/Signup';
 import Profile from './Profile/Profile';
 import NavBar from './NavBar/NavBar';
 import Cart from './Cart/Cart';
+import Favourite from './Favourite/Favourite';
 
 class Main extends Component{
     render(){
+      axios.defaults.withCredentials = true;
         return(
             <div>
         <BrowserRouter>
@@ -20,6 +23,7 @@ class Main extends Component{
             <Route  path = "/login" element = {<Login />}/>
             <Route  path = "/profile" element = {<Profile />}/>
             <Route path = "/cart" element = {<Cart />} />
+            <Route path = "/favourite" element = {<Favourite />} />
           </Routes>
         </BrowserRouter>
             </div>
