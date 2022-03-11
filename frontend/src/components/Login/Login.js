@@ -1,61 +1,132 @@
-import React from "react";
-import { Form, Button, Alert } from "react-bootstrap";
-import axios from 'axios';
+import { Form, Button } from "react-bootstrap";
+import React, { Component } from "react";
+import axios from "axios";
+import cookie from "react-cookies";
+import { Navigate } from "react-router";
+// import Header from '../Header/Header';
 
+class Login extends Component {
+  constructor() {
+    super();
+    this.state = {
+      email: "",
+      password: "",
+      validationError: "",
+    };
+  }
 
-const Login = () => {
-  const [formValue, setformValue] = React.useState({
-    email: "",
-    password: "",
-  });
+  emailHandler = (e) => {
+    this.setState({
+      email: e.target.value,
+    });
+  };
 
-  const handleSubmit = (event) => {
+  passwordHandler = (e) => {
+    this.setState({
+      password: e.target.value,
+    });
+  };
+
+  loginSubmit = (e) => {
+    e.preventDefault();
+
     var data = {
-        email: formValue.email,
-        password: formValue.password
+      email: this.state.email,
+      password: this.state.password,
+    };
+
+    if (this.state.Email == "" || this.state.Password == "") {
+      // this.setState({
+      //   formValidationFailure: true,
+      // });
+
+      console.log("Form Error!");
+    } else {
+      axios.defaults.withCredentials = true;
+
+      axios
+        .post("http://localhost:8000/login", data)
+        .then((response) => {
+          if (response.status === 200) {
+            this.setState({
+              validationError: false,
+              // formValidationFailure: false,
+            });
+          }
+        })
+        .catch((err) => {
+          if (err) {
+            if (err.response.status === 401) {
+              this.setState({
+                validationError: true,
+              });
+              console.log("Error messagw", err.response.status);
+            } else {
+              this.setState({
+                // errorRedirect: true,
+              });
+            }
+          }
+        });
     }
-    axios.post('http://localhost:8000/login', data).then((response) => {
-        if (response.status === 200) {
-          console.log()
-        }
-        
-    });
   };
 
-  const handleChange = (event) => {
-    setformValue({
-      ...formValue,
-      [event.target.name]: event.target.value,
-    });
-  };
-  return (
-    <Form>
-      <Form.Group className="mb-3" controlId="formBasicEmail">
-        <Form.Label>Email address</Form.Label>
-        <Form.Control
-          type="text"
-          name="email"
-          placeholder="Enter email"
-          value={formValue.email}
-          onChange={handleChange}
-          required
-        />
-      </Form.Group>
-      <Form.Group className="mb-3" controlId="formBasicPassword">
-        <Form.Label>Password</Form.Label>
-        <Form.Control
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formValue.password}
-          onChange={handleChange}
-          required
-        />
-      </Form.Group>
-      <div className="d-grid gap-2 rounded-circle">
-          <Button variant="dark" type="submit" size="lg" onClick={handleSubmit}> Login</Button>
+  render() {
+    let redrirectVar = null;
+    if (cookie.load("cookie")) {
+      redrirectVar = <Navigate to="/home" />;
+    }
+    // if(this.state.errorRedirect){
+    //   redrirectVar = <Navigate to="/error" />;
+    // }
+    let errorPanel = null;
+    if (this.state.validationError) {
+      errorPanel = (
+        <div>
+          <div className="alert alert-danger" role="alert">
+            <strong>Wrong Email Password Combination</strong>
+          </div>
+        </div>
+      );
+    }
+    return (
+      <div>
+        {redrirectVar}
+        <Form>
+          {errorPanel}
+          <Form.Group className="mb-3">
+            <Form.Label>Email address</Form.Label>
+            <Form.Control
+              id="email"
+              type="email"
+              onChange={this.emailHandler}
+              required
+            />
+            <Form.Text className="text-muted"></Form.Text>
+          </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label>Password</Form.Label>
+            <Form.Control
+              id="password"
+              type="password"
+              onChange={this.passwordHandler}
+              required
+            />
+          </Form.Group>
+          <div className="d-grid gap-2 rounded-pill">
+            <Button
+              variant="dark"
+              type="submit"
+              size="lg"
+              onClick={this.loginSubmit}
+            >
+              Login
+            </Button>
+          </div>
+        </Form>
       </div>
-    </Form>
-  );
-};
+    );
+  }
+}
 export default Login;

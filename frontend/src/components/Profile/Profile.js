@@ -1,283 +1,400 @@
-import React, { useState, useEffect, useRef } from "react";
-// import { useHistory } from "react-router";
-import {
-	Container,
-	Form,
-	FormGroup,
-	FormLabel,
-	FormControl,
-	Row,
-	Col,
-	Button,
-	Image,
-} from "react-bootstrap";
+import axios from "axios";
+import React, { useEffect } from "react";
+import NavBar from "../NavBar/NavBar";
+import "./Profile.css";
 import cookie from "react-cookies";
-import "./Profile.component.css";
-import Axios from "axios";
-// import { uploadFile } from "react-s3";
-// import "../Registration/Registration.component.css";
-// import { config } from "../../config/awsConfig";
-// import RestNavbar from "../Navbar/CustNavbar";
-// import { awsServer } from "../../config/awsIP";
 
-const Profile = () => {
+export const Profile = () => {
+  const [formValue, setformValue] = React.useState({
+    ProfileId: "",
+    Email: "",
+    Name: "",
+    DOB: "",
+    About: "",
+    Country: "",
+    City: "",
+    Address: "",
+    Gender: "",
+    ProfileImage: "",
+    Phonenumber: "",
+    ProfileImagePreview: undefined,
+  });
 
-  // const history = useHistory();
-	// if (!cookie.load("customerId")) {
-	// 	console.log("No user cookie!");
-	// 	history.push("/customerSignin");
-	// } else {
-	// 	console.log("All good on the cookie front!");
-	// }
+  useEffect(() => {});
 
-	const [firstName, setFirstName] = useState("");
-	const [lastName, setLastName] = useState("");
-	const [emailId, setEmail] = useState("");
-	const [mobileNumber, setMobileNumber] = useState("");
-	const [street, setStreet] = useState("");
-	const [apt, setApt] = useState("");
-	const [city, setCity] = useState("");
-	const [state, setState] = useState("");
-	const [zipcode, setZipcode] = useState("");
-	const [customerImgLocation, setCustomerImgLocation] = useState("");
+  //   useEffect(() => {
+  //     const local = JSON.parse(localStorage.getItem("user"));
+  //     const token = local.user.userdetails.ProfileId;
+  //     // const token = local["user"];
+  //     console.log("Inside useEffect profile" + local.user.token);
+  //     axios
+  //       .get("http://localhost:8000/profile", {
+  //         params: {
+  //           token: token,
+  //         },
+  //       })
+  //       .then((response) => {
+  //         if (response.status === 200) {
+  //           console.log("Inside useEffect profile" + response.data);
+  //           var data = response.data;
+  //           setformValue({
+  //             ...formValue,
+  //             ProfileId: data.ProfileId,
+  //             Email: data.Email,
+  //             Name: data.Name,
+  //             DOB: data.DOB,
+  //             About: data.About,
+  //             Country: data.Country,
+  //             City: data.City,
+  //             Address: data.Address,
+  //             Gender: data.Gender,
+  //             ProfileImage: data.ProfileImage,
+  //             Phonenumber: data.Phonenumber,
+  //           });
+  //         }
+  //         console.log("Profile Photo Name: ", data.ProfileImage);
 
-	const componentIsMounted = useRef(true);
-	const customerId = cookie.load("customerId");
+  //         //Download image
+  //         axios
+  //           .get("http://localhost:8000/profile/download-photo/", {
+  //             params: {
+  //               file: data.ProfileImage,
+  //             },
+  //           })
+  //           .then((response) => {
+  //             let imagePreview = "data:image/jpg;base64, " + response.data;
+  //             setformValue({
+  //               ...formValue,
+  //               ProfileImagePreview: imagePreview,
+  //             });
+  //             // console.log("preview: " + formValue.ProfileImagePreview);
+  //           });
+  //       });
+  //   }, []);
 
-	// const fetchCustomerProfile = async () => {
-	// 	console.log("About to fetch meta => ", customerId);
-	// 	try {
-	// 		const metaResponse = await Axios.get(
-	// 			`http://${awsServer}/fetch-customer/${customerId}`
-	// 		);
+  const handleChange = (event) => {
+    if (event.target.name === "ProfileImage") {
+      var profilePhoto = event.target.files[0];
+      var data = new FormData();
+      data.append("photos", profilePhoto);
+      axios.post("http://localhost:8080/profile/upload-photo", data);
+      setformValue({
+        ...formValue,
+        [event.target.name]: profilePhoto.name,
+      });
+    } else {
+      setformValue({
+        ...formValue,
+        [event.target.name]: event.target.value,
+      });
+    }
+  };
 
-	// 		const meta = metaResponse.data;
+  const handleSubmit = (event) => {
+    var data = {
+      ProfileId: formValue.ProfileId,
+      Email: formValue.Email,
+      Name: formValue.Name,
+      DOB: formValue.DOB,
+      About: formValue.About,
+      Country: formValue.Country,
+      City: formValue.City,
+      Address: formValue.Address,
+      Gender: formValue.Gender,
+      ProfileImage: formValue.ProfileImage,
+      Phonenumber: formValue.Phonenumber,
+    };
+    axios.post("http://localhost:8080/profile", data).then((response) => {
+      if (response.status === 200) {
+        console.log();
+      }
+    });
+  };
 
-	// 		setFirstName(meta.firstName);
-	// 		setLastName(meta.lastName);
-	// 		setEmail(meta.emailId);
-	// 		setMobileNumber(meta.contactNumber);
-	// 		setCustomerImgLocation(meta.profileImgUrl);
-	// 		setStreet(meta.addresses[0].street);
-	// 		setApt(meta.addresses[0].apt);
-	// 		setCity(meta.addresses[0].city);
-	// 		setState(meta.addresses[0].state);
-	// 		setZipcode(meta.addresses[0].zipcode);
-	// 		console.log(meta);
-	// 	} catch (err) {
-	// 		console.error(err);
-	// 	}
-	// };
-
-	// useEffect(() => {
-	// 	// each useEffect can return a cleanup function
-	// 	return () => {
-	// 		componentIsMounted.current = false;
-	// 	};
-	// }, []);
-
-	// useEffect(() => {
-	// 	fetchCustomerProfile();
-	// 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	// }, []);
-
-	// const pushRestaurantImgToAWS = async (e) => {
-	// 	try {
-	// 		const res = await uploadFile(e.target.files[0], config);
-	// 		console.log("Uploaded on AWS S3 => ", JSON.stringify(res));
-	// 		setCustomerImgLocation(res.location);
-	// 		return;
-	// 	} catch (err) {
-	// 		console.error(
-	// 			"Failed when uploading bg image for restaurant => ",
-	// 			err
-	// 		);
-	// 	}
-	// };
-
-	const updateAccount = async (e) => {
-		e.preventDefault();
-
-		const payload = {
-			firstName: firstName,
-			lastName: lastName,
-			emailId: emailId,
-			mobileNumber: String(mobileNumber),
-			street: street,
-			apt: apt,
-			city: city,
-			state: state,
-			zipcode: zipcode,
-			customerImgUrl: customerImgLocation,
-			customerId: customerId,
-		};
-	};
-
+  let profileImageData = (
+    <img
+      id="avatar_img"
+      src="https://www.etsy.com/images/avatars/default_avatar_400x400.png"
+      // src={formValue.ProfileImagePreview}
+      alt=""
+      class="img-fluid rounded-circle"
+    />
+  );
+  if (formValue.ProfileImagePreview) {
+    profileImageData = (
+      <img
+        id="avatar_img"
+        // src="https://www.etsy.com/images/avatars/default_avatar_400x400.png"
+        src={formValue.ProfileImagePreview}
+        alt=""
+        class="img-fluid rounded-circle"
+      />
+    );
+  }
   return (
-		<Container fluid style={{ background: "whitesmoke", height: "300vh" }}>
-			<Row
-				style={{
-					paddingLeft: "50px",
-					paddingRight: "50px",
-				}}
-			>
-				<Col>
-					<h3 className="text mt-3">
-						Update your information, {firstName}
-					</h3>
-				</Col>
-			</Row>
-			<Row
-				style={{
-					paddingLeft: "50px",
-					paddingRight: "500px",
-				}}
-			>
-				<Col>
-					<Image
-						className="mx-auto d-block"
-						xs={6}
-						md={4}
-						src="https://decider.com/wp-content/uploads/2021/03/rick-and-morty-s5-5.jpg?quality=80&strip=all/171x180"
-						rounded
-						style={{ backgroundColor: "black" }}
-					/>
-				</Col>
-				<Col>
-					<Form onSubmit={updateAccount} className="p2">
-						<FormGroup className="mt-3">
-							<FormLabel>First name:</FormLabel>
-							<FormControl
-								type="text"
-								name="name"
-								onChange={(e) => {
-									setFirstName(e.target.value);
-								}}
-								defaultValue={firstName}
-								required
-							/>
-						</FormGroup>
+    <div>
+      <NavBar />
+      {/* <Container fluid> */}
+      <div id="content" class="clear " role="main">
+        {/* <Row className="justify-content-md-center"> */}
+        {/* <Col xs lg="2"> */}
+        <div className="grid-child green">
+          <div id="content" className="clear " role="main">
+            <link
+              rel="stylesheet"
+              href="https://www.etsy.com/ac/primary/css/base.20220304135846.css"
+              type="text/css"
+            />
+            {/* <link
+                rel="stylesheet"
+                href="https://www.etsy.com/dac/common/web-toolkit/scoped/scoped_fixed_shared.20220304135846,common/web-toolkit/v1_toolkit_with_v2_footer/fixed-global-nav.20220304135846,common/web-toolkit/a11y_colors/overrides.20220304135846.css"
+                type="text/css"
+              /> */}
+            <link
+              rel="stylesheet"
+              href="https://www.etsy.com/dac/site-chrome/components/components.20220304135846,site-chrome/header/header.20220304135846,site-chrome/footer/footer.20220304135846,gdpr/settings-overlay.20220304135846.css"
+              type="text/css"
+            />
+            <link
+              rel="stylesheet"
+              href="https://www.etsy.com/dac/your/profile.20210909222603,modules/autosuggest.20210909222603,your-etsy.20220304135846,your/account/settings.20220304135846,modules/forms.20210909222603.css"
+              type="text/css"
+            />
+          </div>
+        </div>
 
-						<FormGroup className="mt-3">
-							<FormLabel>Last name:</FormLabel>
-							<FormControl
-								type="text"
-								name="name"
-								onChange={(e) => {
-									setLastName(e.target.value);
-								}}
-								defaultValue={lastName}
-								required
-							/>
-						</FormGroup>
+        <div className="container">
+          <div className="primary profile-edit">
+            <div className="your-etsy-header clear">
+              <h1>Your Public Profile</h1>
+              <p>Everything on this page can be seen by anyone</p>
+              <a
+                className="view-profile btn-secondary small registration-hidden"
+                href=""
+              >
+                View Profile
+              </a>
+            </div>
+            <form class="section-inner" encType="multipart/form-data">
+              <div class="input-group">
+                <label class="label" for="avatar">
+                  Profile Picture
+                </label>
+                <div class="change-avatar-content">
+                  <input
+                    type="file"
+                    class="upload-new-avatar"
+                    id="avatar"
+                    name="ProfileImage"
+                    size="15"
+                    aria-describedby="changing-avatar-disabled avatar-technical-hint"
+                    onChange={handleChange}
+                  />
 
-						<FormGroup className="mt-3">
-							<FormLabel>Email ID: </FormLabel>
-							<FormControl
-								type="email"
-								name="emailId"
-								onChange={(e) => {
-									setEmail(e.target.value);
-								}}
-								defaultValue={emailId}
-								required
-							/>
-						</FormGroup>
+                  <div class="image-wrapper user-avatar-wrapper">
+                    {profileImageData}
+                  </div>
+                </div>
 
-						<FormGroup className="mt-3">
-							<FormLabel>Contact Number:</FormLabel>
-							<FormControl
-								type="tel"
-								name="mobileNumber"
-								defaultValue={mobileNumber}
-								onChange={(e) => {
-									setMobileNumber(e.target.value);
-								}}
-								required
-							/>
-						</FormGroup>
+                <span class="inline-message" id="avatar-technical-hint">
+                  Must be a .jpg, .gif or .png file smaller than 10MB and at
+                  least 400px by 400px.
+                </span>
+              </div>
+              <hr />
+              <div
+                class="input-group"
+                id="name"
+                role="group"
+                aria-labelledby="your-name-label"
+              >
+                <label class="label" id="your-name-label">
+                  Your Name
+                </label>
+                <p class="full-name" id="full-name">
+                  Admin&nbsp;
+                  <a
+                    class="request-name-change overlay-trigger"
+                    href="#namechange-overlay"
+                    rel="#namechange-overlay"
+                    aria-describedby="your-name-label"
+                  >
+                    Change or remove
+                  </a>
+                </p>
+              </div>
+              <hr />
+              <div class="input-group location-city">
+                <label class="label" for="Email">
+                  Email
+                </label>
+                <div class="autosuggest-wrapper">
+                  <input
+                    aria-describedby="the_reason"
+                    type="text"
+                    autocomplete="off"
+                    name="Email"
+                    id="Email"
+                    value={formValue.Email}
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
+              <hr />
+              <div class="input-group location-city">
+                <label class="label" for="Phonenumber">
+                  Phone Number
+                </label>
+                <div class="autosuggest-wrapper">
+                  <input
+                    aria-describedby="the_reason"
+                    type="number"
+                    autocomplete="off"
+                    name="Phonenumber"
+                    id="Phonenumber"
+                    value={formValue.Phonenumber}
+                    onChange={handleChange}
+                    class="text"
+                  />
+                </div>
+              </div>
+              <hr />
+              <fieldset>
+                <div
+                  class="gender-class"
+                  role="group"
+                  aria-labelledby="gender-group-label"
+                >
+                  <label class="label" id="gender-group-label">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    Gender
+                  </label>
+                  {/* <div class="radio-group" id="gender"> */}
+                  <label for="female">
+                    &nbsp;Female
+                    <input
+                      type="radio"
+                      value="female"
+                      name="gender"
+                      id="female"
+                      // checked={formValue.Gender === "female"}
+                      onChange={handleChange}
+                    />
+                  </label>
+                  <label for="male">
+                    &nbsp;Male
+                    <input
+                      type="radio"
+                      value="male"
+                      name="gender"
+                      id="male"
+                      // checked={formValue.Gender === "male"}
+                      onChange={handleChange}
+                    />
+                  </label>
 
-						<FormGroup className="mt-3">
-							<FormLabel>Street: </FormLabel>
-							<FormControl
-								type="text"
-								defaultValue={street}
-								onChange={(e) => {
-									setStreet(e.target.value);
-								}}
-							/>
-						</FormGroup>
+                  <label for="private">
+                    &nbsp;Rather not say
+                    <input
+                      type="radio"
+                      value="private"
+                      name="gender"
+                      id="private"
+                      // checked={formValue.Gender === "Rather not say"}
+                      onChange={handleChange}
+                    />
+                  </label>
 
-						<FormGroup className="mt-3">
-							<FormLabel>Apt no: </FormLabel>
-							<FormControl
-								type="text"
-								defaultValue={apt}
-								onChange={(e) => {
-									setApt(e.target.value);
-								}}
-							/>
-						</FormGroup>
-
-						<Row>
-							<Col>
-								<FormGroup className="mt-3">
-									<FormLabel>City: </FormLabel>
-									<FormControl
-										type="text"
-										defaultValue={city}
-										onChange={(e) => {
-											setCity(e.target.value);
-										}}
-									/>
-								</FormGroup>
-							</Col>
-							<Col>
-								<FormGroup className="mt-3">
-									<FormLabel>State: </FormLabel>
-									<FormControl
-										type="text"
-										defaultValue={state}
-										onChange={(e) => {
-											setState(e.target.value);
-										}}
-									/>
-								</FormGroup>
-							</Col>
-							<Col>
-								<FormGroup className="mt-3">
-									<FormLabel>Zipcode: </FormLabel>
-									<FormControl
-										type="text"
-										defaultValue={zipcode}
-										onChange={(e) => {
-											setZipcode(e.target.value);
-										}}
-									/>
-								</FormGroup>
-							</Col>
-						</Row>
-
-						<FormGroup className="mt-3">
-							<Form.Label>Add new profile image:</Form.Label>
-							<Form.Control
-								type="file"
-							/>
-						</FormGroup>
-
-						<Button
-							variant="dark"
-							type="submit"
-							style={{ color: "white", marginLeft: "650px" }}
-							size="lg"
-						>
-							Save new details.
-						</Button>
-					</Form>
-				</Col>
-			</Row>
-		</Container>
-	);
+                  {/* </div> */}
+                </div>
+              </fieldset>
+              <hr />
+              <div class="input-group location-city">
+                <label class="label" for="DOB">
+                  Date of Birth
+                </label>
+                <div class="autosuggest-wrapper">
+                  <input
+                    aria-describedby="the_reason"
+                    type="date"
+                    autocomplete="off"
+                    name="DOB"
+                    id="DOB"
+                    value={formValue.DOB}
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
+              <hr />
+              <div class="input-group location-city">
+                <label class="label" for="Country">
+                  Address
+                </label>
+                <div class="autosuggest-wrapper">
+                  <input
+                    aria-describedby="the_reason"
+                    type="text"
+                    autocomplete="off"
+                    name="Address"
+                    id="Address"
+                    value={formValue.Address}
+                    onChange={handleChange}
+                    class="text"
+                  />
+                </div>
+              </div>
+              <hr class="registration-hidden" />
+              <div class="input-group location-city">
+                <label class="label" for="city3">
+                  City
+                </label>
+                <div class="autosuggest-wrapper">
+                  <input
+                    aria-describedby="the_reason"
+                    type="text"
+                    autocomplete="off"
+                    name="City"
+                    id="City"
+                    value={formValue.City}
+                    onChange={handleChange}
+                    class="text"
+                  />
+                </div>
+              </div>
+              <hr />
+              <div class="input-group location-city">
+                <label class="label" for="Country">
+                  Country
+                </label>
+                <div class="autosuggest-wrapper">
+                  <input
+                    aria-describedby="the_reason"
+                    type="text"
+                    autocomplete="off"
+                    name="Country"
+                    id="Country"
+                    value={formValue.Country}
+                    onChange={handleChange}
+                    class="text"
+                  />
+                </div>
+              </div>
+              <div class="submit">
+                <input
+                  class="btn-primary"
+                  type="submit"
+                  value="Save Changes"
+                  onClick={handleSubmit}
+                />
+              </div>
+            </form>
+          </div>
+        </div>
+        {/* </Col> */}
+        {/* </Row> */}
+        {/* </Container> */}
+      </div>
+    </div>
+  );
 };
-
 export default Profile;
