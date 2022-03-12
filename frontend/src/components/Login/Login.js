@@ -52,6 +52,7 @@ class Login extends Component {
               validationError: false,
               // formValidationFailure: false,
             });
+            window.location.href = "/home";
           }
         })
         .catch((err) => {
@@ -72,10 +73,10 @@ class Login extends Component {
   };
 
   render() {
-    let redrirectVar = null;
-    if (cookie.load("cookie")) {
-      redrirectVar = <Navigate to="/home" />;
-    }
+    // let redrirectVar = null;
+    // if (cookie.load("cookie")) {
+    //   redrirectVar = <Navigate to="/home" />;
+    // }
     // if(this.state.errorRedirect){
     //   redrirectVar = <Navigate to="/error" />;
     // }
@@ -91,7 +92,7 @@ class Login extends Component {
     }
     return (
       <div>
-        {redrirectVar}
+        {/* {redrirectVar} */}
         <Form>
           {errorPanel}
           <Form.Group className="mb-3">

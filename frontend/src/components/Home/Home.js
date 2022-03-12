@@ -5,8 +5,22 @@ import { Card } from "react-bootstrap";
 import axios from "axios";
 import cookie from "react-cookies";
 import { renderMatches } from "react-router";
+import "./home.css";
+import Footer from "../Footer/Footer";
+import EuroIcon from "@mui/icons-material/Euro";
+import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 
 function Home() {
+  const [currencyvalue, setcurrencyValue] = useState("USD");
+  let currencySymbol = null;
+  if (currencyvalue === "USD") {
+    currencySymbol = <MonetizationOnIcon />;
+  } else if (currencyvalue === "Euro") {
+    currencySymbol = <EuroIcon />;
+  } else if (currencyvalue === "INR") {
+    currencySymbol = <CurrencyRupeeIcon />;
+  }
   axios.defaults.withCredentials = true;
   const [username, setUsername] = useState("");
   let userPanel = null;
@@ -21,14 +35,14 @@ function Home() {
         style={{
           "text-align": "center",
           background: "#fdebd2",
-          height: "200px",
+          height: "120px",
         }}
       >
         <Card.Body>
           <Card.Text
             style={{ "font-size": "50px", "font-family": "Times New Roman" }}
           >
-            Welcome back, {username}!
+            Welcome back, <a href="/profile">{username}</a>!
           </Card.Text>
         </Card.Body>
       </Card>
@@ -44,12 +58,16 @@ function Home() {
         style={{
           "text-align": "center",
           background: "#fdebd2",
-          height: "200px",
+          height: "120px",
         }}
       >
         <Card.Body>
           <Card.Text
-            style={{ "font-size": "50px", "font-family": "Times New Roman" }}
+            style={{
+              "font-size": "50px",
+              "font-family": "Times New Roman",
+              lineHeight: "90px",
+            }}
           >
             Explore one-of-a-kind finds from independent makers
           </Card.Text>
@@ -75,10 +93,19 @@ function Home() {
   }, []);
   return (
     <div>
-      <NavBar />
-      {userPanel}
+      <div className="content-container">
+        <NavBar />
+        {userPanel}
+        {currencySymbol}
+        {currencyvalue}
+      </div>
+      <div className="footer--pin">
+        <Footer setcurrencyValue={setcurrencyValue} />
+      </div>
     </div>
   );
 }
 
 export default Home;
+
+

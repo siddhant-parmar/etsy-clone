@@ -70,8 +70,9 @@ app.use(function (req, res, next) {
 connection.getConnection((err) => {
   if (err) {
     throw new "Error occured: "() + err;
+  } else {
+    console.log("pool created");
   }
-  console.log("pool created");
 });
 
 // app.post('/login', function (req, res) {
