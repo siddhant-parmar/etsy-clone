@@ -71,7 +71,7 @@ class NavBar extends Component {
         </Dropdown>
       );
     } else {
-      console.log("Not able to read cookie");
+      // console.log("Not able to read cookie");
       LoginOutButton = (
         <Nav.Link className="border-left pl-2 ms-auto" href="">
           <LoginSignupButton />

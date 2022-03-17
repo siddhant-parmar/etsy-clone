@@ -107,7 +107,7 @@ export const Profile = () => {
       ProfileImage: formValue.ProfileImage,
       Phonenumber: formValue.Phonenumber,
     };
-    axios.post("http://localhost:8080/profile", data).then((response) => {
+    axios.post("http://localhost:8000/profile", data).then((response) => {
       if (response.status === 200) {
         console.log();
       }

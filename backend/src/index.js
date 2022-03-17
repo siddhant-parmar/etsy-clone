@@ -78,7 +78,6 @@ connection.getConnection((err) => {
   }
 });
 
-
 app.post("/login", function (req, res) {
   console.log("Inside login POST");
   console.log("Request Body: ", req.body);
@@ -253,3 +252,49 @@ app.get("/getProducts", function (req, res) {
     }
   });
 });
+
+app.get("/productDetails", function (req, res) {
+  console.log("Inside item  GET");
+  console.log("Request Body ItemId: " + req.query.ItemId);
+  const ItemId = req.query.ItemId;
+  connection.getConnection(function (err, conn) {
+    if (err) {
+      console.log("Error in creating connection!");
+      res.writeHead(400, {
+        "Content-type": "text/plain",
+      });
+      res.end("Error in creating connection!");
+    } else {
+      //Login validation query
+
+      var sql = "SELECT * from products WHERE ItemId = " + mysql.escape(ItemId);
+      conn.query(sql, function (err, result) {
+        if (err) {
+          console.log("Error in retrieving single item data");
+          res.writeHead(400, {
+            "Content-type": "text/plain",
+          });
+          res.end("Error in retrieving single item data");
+        } else {
+          // console.log(result[0].password);
+          //   console.log("Items Data: ", result);
+          res.writeHead(200, {
+            "Content-type": "application/json",
+          });
+          for (const [key, item] of Object.entries(result)) {
+            var file = item.ImageName;
+            var filetype = file.split(".").pop();
+            console.log(file);
+            var filelocation = path.join(__dirname + "/../src/uploads", file);
+            var img = fs.readFileSync(filelocation);
+            var base64img = new Buffer(img).toString("base64");
+            item.ItemImage = "data:image/" + filetype + ";base64," + base64img;
+          }
+          //   console.log(result);
+          res.end(JSON.stringify(result));
+        }
+      });
+    }
+  });
+});
+

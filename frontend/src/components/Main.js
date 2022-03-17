@@ -10,6 +10,7 @@ import NavBar from "./NavBar/NavBar";
 import Cart from "./Cart/Cart";
 import Favourite from "./Favourite/Favourite";
 import Product from "./Home/Product";
+import { Nav } from "react-bootstrap";
 
 class Main extends Component {
   render() {

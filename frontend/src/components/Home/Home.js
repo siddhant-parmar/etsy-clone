@@ -1,23 +1,20 @@
-import { Modal, Button } from "react-bootstrap";
-import NavBar from "../NavBar/NavBar";
 import React, { useEffect, useState } from "react";
 import { Card } from "react-bootstrap";
 import axios from "axios";
 import cookie from "react-cookies";
-import { renderMatches } from "react-router";
 import "./home.css";
+import NavBar from "../NavBar/NavBar";
 import Footer from "../Footer/Footer";
 import EuroIcon from "@mui/icons-material/Euro";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
-import ProductDisplay from "../Pages/ProductDisplay";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import ImageListItemBar from "@mui/material/ImageListItemBar";
 import IconButton from "@mui/material/IconButton";
 import HeartIcon from "@mui/icons-material/Favorite";
 import Product from "./Product";
-import { borderRight, width } from "@mui/system";
+import { useNavigate } from "react-router-dom";
 
 function Home() {
   const [currencyvalue, setcurrencyValue] = useState("USD");
@@ -76,24 +73,31 @@ function Home() {
   //     }
   // }
   const [itemData, setItemData] = useState([]);
+  const [flag, setFlag] = useState(false);
+  const navigate = useNavigate();
+
   const fetchItemImages = async () => {
     await axios.get("http://localhost:8000/getProducts").then((response) => {
       setItemData(response.data);
       // itemData = JSON.parse(itemData);
     });
   };
-  useEffect(() => {
-    axios.get("http://localhost:8000/home").then((response) => {
+  const fetchUserDetails = async () => {
+    await axios.get("http://localhost:8000/home").then((response) => {
       var stringify = JSON.stringify(response.data.user_details[0].Name);
       setUsername(stringify.slice(1, -1));
       // setUserPanel;
     });
+  };
+  useEffect(() => {
+    fetchUserDetails();
     fetchItemImages();
-    console.log(itemData);
   }, []);
 
-  const displayProduct = () => {
-    window.location.href = "/product";
+  const displayProduct = (e) => {
+    navigate("/product", {
+      state: e.target.name,
+    });
   };
 
   return (
@@ -113,21 +117,23 @@ function Home() {
         {currencyvalue} */}
 
         <ImageList sx={{ padding: "60px" }}>
-          <ImageListItem key="Subheader" cols={5}></ImageListItem>
+          <ImageListItem key="Subheader" cols={4}></ImageListItem>
           {itemData.map((item) => (
             <ImageListItem
               key={item.ItemImage}
-              style={{ borderRadius: 2, padding: 10, width: 280 }}
+              style={{ padding: 10, width: "100%" }}
             >
               <img
                 src={item.ItemImage}
                 srcSet={item.ItemImage}
                 alt={item.ItemName}
+                name={item.ItemId}
                 loading="lazy"
                 onClick={displayProduct}
               />
               <ImageListItemBar
                 title={item.ItemName}
+                subtitle={item.Price}
                 position="below"
                 actionIcon={
                   <IconButton sx={{ color: "#ff0000" }}>
