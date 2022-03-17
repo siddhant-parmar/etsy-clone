@@ -10,6 +10,9 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 
+const path = require("path");
+const fs = require("fs");
+
 app.use(cookieParser());
 app.use(bodyParser.json());
 
@@ -69,73 +72,12 @@ app.use(function (req, res, next) {
 
 connection.getConnection((err) => {
   if (err) {
-    throw new "Error occured: "() + err;
+    console.log(err);
   } else {
     console.log("pool created");
   }
 });
 
-// app.post('/login', function (req, res) {
-
-//     console.log('Inside login POST');
-//     console.log('Request Body: ', req.body);
-
-//     //Query
-
-//     connection.getConnection(function (err, conn) {
-//         if (err) {
-//             console.log('Error in creating connection!');
-//             res.writeHead(400, {
-//                 'Content-type': 'text/plain'
-//             });
-//             res.end('Error in creating connection!');
-//         }
-//         else {
-
-//             //Login validation query
-//             var sql = 'SELECT * from login_credentials WHERE Email = ' + mysql.escape(req.body.Email);
-//             conn.query(sql, function (err, result) {
-
-//                 if (err) {
-//                     res.writeHead(400, {
-//                         'Content-Type': 'text/plain'
-//                     });
-//                     console.log('Invalid Credentials1!');
-//                     res.end('Invalid Credentials1!');
-//                 }
-//                 else {
-//                     if (result.length == 0 || req.body.Password != result[0].Password) {
-//                         res.writeHead(401, {
-//                             'Content-type': 'text/plain'
-//                         })
-//                         console.log('Invalid Credentials2!');
-//                         res.end('Invalid Credentials2!');
-//                     }
-//                     else {
-//                         console.log(result);
-//                         // res.cookie('cookie', result[0].Firstname, {
-//                         //     maxAge: 360000,
-//                         //     httpOnly: false,
-//                         //     path: '/'
-//                         // });
-//                         // res.cookie('Accounttype', result[0].Accounttype, {
-//                         //     maxAge: 360000,
-//                         //     httpOnly: false,
-//                         //     path: '/'
-//                         // });
-//                         // req.session.user = result[0];
-//                         res.writeHead(200, {
-//                             'Content-type': 'text/plain'
-//                         })
-//                         console.log('Login successful!');
-//                         res.end('Login successful!');
-//                     }
-
-//                 }
-//             });
-//         }
-//     });
-// });
 
 app.post("/login", function (req, res) {
   console.log("Inside login POST");
@@ -264,10 +206,50 @@ app.get("/home", function (req, res) {
       loggedIn: false,
     });
   }
-  console.log(
-    "Session message: " +
-      req.session.user +
-      " IS UNDEFINED: " +
-      (req.session.user == undefined)
-  );
+  // console.log(
+  //   "Session message: " +
+  //     req.session.user +
+  //     " IS UNDEFINED: " +
+  //     (req.session.user == undefined)
+  // );
+});
+
+app.get("/getProducts", function (req, res) {
+  console.log("Getting images for Home page");
+  connection.getConnection(function (err, conn) {
+    if (err) {
+      res.writeHead(400, {
+        "Content-type": "text/plain",
+      });
+      console.log("Error in creating connection!");
+      res.end("Error in creating connection!");
+      console.log("Error");
+    } else {
+      var sql = "SELECT * from products;";
+      conn.query(sql, function (err, result) {
+        if (err) {
+          res.writeHead(400, {
+            "Content-Type": "text/plain",
+          });
+          res.end("ERROR");
+          console.log("Error: " + err);
+        } else {
+          res.writeHead(200, {
+            "Content-type": "text/plain",
+          });
+          // console.log(result);
+          for (const [key, item] of Object.entries(result)) {
+            var file = item.ImageName;
+            var filetype = file.split(".").pop();
+            console.log(file);
+            var filelocation = path.join(__dirname + "/../src/uploads", file);
+            var img = fs.readFileSync(filelocation);
+            var base64img = new Buffer(img).toString("base64");
+            item.ItemImage = "data:image/" + filetype + ";base64," + base64img;
+          }
+          res.end(JSON.stringify(result));
+        }
+      });
+    }
+  });
 });

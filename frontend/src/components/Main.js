@@ -9,6 +9,7 @@ import Profile from "./Profile/Profile";
 import NavBar from "./NavBar/NavBar";
 import Cart from "./Cart/Cart";
 import Favourite from "./Favourite/Favourite";
+import Product from "./Home/Product";
 
 class Main extends Component {
   render() {
@@ -24,6 +25,7 @@ class Main extends Component {
             <Route path="/profile" element={<Profile />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/favourite" element={<Favourite />} />
+            <Route path="/product" element={<Product />} />
           </Routes>
         </BrowserRouter>
       </div>

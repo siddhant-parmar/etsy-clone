@@ -18,7 +18,7 @@ class NavBar extends Component {
     let LoginOutButton = null;
     let Favourite = null;
     if (cookie.load("cookie")) {
-      console.log("Able to read cookie");
+      // console.log("Able to read cookie");
       Favourite = (
         <div>
           <Nav.Link className="border-left pl-2 ms-auto" href="/favourite">
