@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import { Navbar, Container, Nav } from "react-bootstrap";
 import CurrencyModal from "../Currency/currencyModal";
 import CopyrightIcon from "@mui/icons-material/Copyright";
+import styled from "styled-components";
 function Footer({ setcurrencyValue }) {
   const [currencyvalue, setCurrencyValue] = useState("USD");
 
   setcurrencyValue(currencyvalue);
+
   return (
     <>
       <div
@@ -49,7 +51,7 @@ function Footer({ setcurrencyValue }) {
               </Nav.Link>
               <Navbar.Text
                 className="border-left pl-2 ms-auto"
-                style={{ color: "white" , lineHeight:"80px"}}
+                style={{ color: "white", lineHeight: "80px" }}
               >
                 <CopyrightIcon /> 2022 Etsy, inc.
               </Navbar.Text>

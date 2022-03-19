@@ -13,6 +13,8 @@ const session = require("express-session");
 const path = require("path");
 const fs = require("fs");
 
+const { v4: uuidv4 } = require("uuid");
+
 app.use(cookieParser());
 app.use(bodyParser.json());
 
@@ -38,6 +40,7 @@ app.use(
 );
 
 const bcrypt = require("bcrypt");
+const { timeStamp } = require("console");
 const saltRounds = 10;
 
 app.get("/", (req, res) => {
@@ -123,11 +126,17 @@ app.post("/login", function (req, res) {
             console.log(result);
             console.log("Cookie Message:" + result[0].Name);
             req.session.user = result;
-            res.cookie("cookie", result[0].Name, {
+            res.cookie("cookie", result[0].ProfileId, {
               maxAge: 360000,
               httpOnly: false,
               path: "/",
             });
+            res.cookie("ProfileDetails", JSON.stringify(result[0]), {
+              maxAge: 360000,
+              httpOnly: false,
+              path: "/",
+            });
+
             // res.cookie('Accounttype', result[0].Accounttype, {
             //     maxAge: 360000,
             //     httpOnly: false,
@@ -290,7 +299,9 @@ app.get("/productDetails", function (req, res) {
             var base64img = new Buffer(img).toString("base64");
             item.ItemImage = "data:image/" + filetype + ";base64," + base64img;
           }
+          // result[0].ItemId = ItemId;
           //   console.log(result);
+          console.log("SIDDDDDDD: " + JSON.stringify(result));
           res.end(JSON.stringify(result));
         }
       });
@@ -298,3 +309,157 @@ app.get("/productDetails", function (req, res) {
   });
 });
 
+app.post("/profile", function (req, res) {
+  console.log("Inside profile POST");
+  console.log("Profile Id: " + JSON.stringify(req.body.ProfileId));
+  console.log("Request Body: " + JSON.stringify(req.body));
+
+  connection.getConnection(function (err, conn) {
+    if (err) {
+      res.writeHead(400, {
+        "Content-type": "text/plain",
+      });
+      console.log("Error in creating connection!");
+      res.end("Error in creating connection!");
+      console.log("Error");
+    } else {
+      var sql =
+        "UPDATE login_credentials SET Email = '" +
+        req.body.Email +
+        "', Name = '" +
+        req.body.Name +
+        "', DOB = '" +
+        req.body.DOB +
+        "', About = '" +
+        req.body.About +
+        "', Country = '" +
+        req.body.Country +
+        "', City = '" +
+        req.body.City +
+        "', Address = '" +
+        req.body.Address +
+        "', Gender = '" +
+        req.body.Gender +
+        "', ProfileImage = '" +
+        req.body.ProfileImage +
+        "', Phonenumber = '" +
+        req.body.Phonenumber +
+        "' WHERE ProfileId = " +
+        req.body.ProfileId +
+        ";";
+
+      conn.query(sql, function (err, result) {
+        if (err) {
+          res.writeHead(400, {
+            "Content-Type": "text/plain",
+          });
+          res.end("ERROR");
+          console.log("Error: " + err);
+        } else {
+          res.writeHead(200, {
+            "Content-type": "text/plain",
+          });
+          console.log(
+            "Updated the details successfully for profile id: " +
+              req.body.ProfileId
+          );
+        }
+      });
+    }
+  });
+});
+
+app.post("/purchase", function (req, res) {
+  console.log("Inside purchase POST");
+  // console.log(
+  //   "Request body: " +
+  //     JSON.stringify("TEST: " + JSON.stringify(req.body[0].length))
+  // );
+  res.send("Success");
+  connection.getConnection(function (err, conn) {
+    if (err) {
+      console.log("Error in creating connection!");
+      res.writeHead(400, {
+        "Content-type": "text/plain",
+      });
+      res.end("Error in creating connection!");
+    } else {
+      var OrderId = uuidv4();
+      var records = [];
+      var datetime = new Date();
+      // var ProfileId = 2;
+      for (var i = 0; i < req.body[0].length; i++) {
+        var image = req.body[0][i].ItemName + ".jpg";
+        records.push([
+          req.body[0][0].ProfileId,
+          OrderId,
+          req.body[0][i].ItemId,
+          req.body[0][i].ItemName,
+          image,
+          req.body[0][i].ShopId,
+          req.body[0][i].quantity,
+          req.body[0][i].Price,
+          datetime.toISOString().slice(0, 10),
+        ]);
+        console.log(records);
+      }
+      var sql =
+        "INSERT INTO orderdetails (ProfileId, OrderId, ItemId, ItemName, ImageName, ShopName, Quantity, Price, PurchaseDate) VALUES ?";
+      conn.query(sql, [records], function (err, result) {
+        if (err) {
+          // res.writeHead(400, {
+          //   "Content-Type": "text/plain",
+          // });
+          // res.end("ERROR");
+          console.log("Error: " + err);
+        } else {
+          // res.writeHead(200, {
+          //   "Content-type": "text/plain",
+          // });
+          console.log("Added" + result.affectedRows + "row!");
+        }
+      });
+    }
+  });
+});
+
+app.post("/history", function (req, res) {
+  console.log("Inside item  GET");
+  const Id = parseInt(req.body.ProfileId);
+  console.log("Request Body: " + Id);
+  connection.getConnection(function (err, conn) {
+    if (err) {
+      console.log("Error in creating connection!");
+      // res.writeHead(400, {
+      //   "Content-type": "text/plain",
+      // });
+      res.end("Error in creating connection!");
+    } else {
+      //Login validation query
+      var sql = "SELECT * from orderdetails WHERE ProfileId = " + Id + ";";
+      conn.query(sql, function (err, result) {
+        if (err) {
+          // res.writeHead(400, {
+          //   "Content-Type": "text/plain",
+          // });
+          res.end("ERROR");
+          console.log("Error: " + err);
+        } else {
+          // res.writeHead(200, {
+          //   "Content-type": "text/plain",
+          // });
+          for (const [key, item] of Object.entries(result)) {
+            var file = item.ImageName;
+            var filetype = file.split(".").pop();
+            console.log(file);
+            var filelocation = path.join(__dirname + "/../src/uploads", file);
+            var img = fs.readFileSync(filelocation);
+            var base64img = new Buffer(img).toString("base64");
+            item.ItemImage = "data:image/" + filetype + ";base64," + base64img;
+          }
+          res.send(result);
+        }
+      });
+    }
+  });
+});

@@ -7,6 +7,7 @@ import { useState } from "react";
 import Footer from "../Footer/Footer";
 
 export const Profile = () => {
+  const [ProfileData, setData] = useState(cookie.load("ProfileDetails"));
   const [currencyvalue, setcurrencyValue] = useState("USD");
   const [formValue, setformValue] = React.useState({
     ProfileId: "",
@@ -22,7 +23,6 @@ export const Profile = () => {
     Phonenumber: "",
     ProfileImagePreview: undefined,
   });
-
   useEffect(() => {});
 
   //   useEffect(() => {
@@ -91,11 +91,13 @@ export const Profile = () => {
         [event.target.name]: event.target.value,
       });
     }
+    let temp = cookie.load("ProfileDetails");
+    setData(temp);
   };
 
   const handleSubmit = (event) => {
     var data = {
-      ProfileId: formValue.ProfileId,
+      ProfileId: cookie.load("cookie"),
       Email: formValue.Email,
       Name: formValue.Name,
       DOB: formValue.DOB,
@@ -107,9 +109,17 @@ export const Profile = () => {
       ProfileImage: formValue.ProfileImage,
       Phonenumber: formValue.Phonenumber,
     };
+
     axios.post("http://localhost:8000/profile", data).then((response) => {
       if (response.status === 200) {
-        console.log();
+        console.log("TESTING SUCCESS");
+        cookie.remove("ProfileDetails", { path: "/" });
+        cookie.save("ProfileDetails", JSON.stringify(data), {
+          maxAge: 360000,
+          httpOnly: false,
+          path: "/",
+        });
+        console.log(cookie.load("ProfileDetails"));
       }
     });
   };
@@ -206,26 +216,24 @@ export const Profile = () => {
                   </span>
                 </div>
                 <hr />
-                <div
-                  class="input-group"
-                  id="name"
-                  role="group"
-                  aria-labelledby="your-name-label"
-                >
-                  <label class="label" id="your-name-label">
+
+                <div class="input-group location-city">
+                  <label class="label" for="Phonenumber">
                     Your Name
                   </label>
-                  <p class="full-name" id="full-name">
-                    Admin&nbsp;
-                    <a
-                      class="request-name-change overlay-trigger"
-                      href="#namechange-overlay"
-                      rel="#namechange-overlay"
-                      aria-describedby="your-name-label"
-                    >
-                      Change or remove
-                    </a>
-                  </p>
+                  <div class="autosuggest-wrapper">
+                    <input
+                      aria-describedby="the_reason"
+                      type="text"
+                      autoComplete="off"
+                      name="Name"
+                      id="Name"
+                      placeholder={ProfileData.Name}
+                      value={formValue.Name}
+                      onChange={handleChange}
+                      class="text"
+                    />
+                  </div>
                 </div>
                 <hr />
                 <div class="input-group location-city">
@@ -236,11 +244,13 @@ export const Profile = () => {
                     <input
                       aria-describedby="the_reason"
                       type="text"
-                      autocomplete="off"
+                      autoComplete="off"
                       name="Email"
                       id="Email"
+                      placeholder={ProfileData.Email}
                       value={formValue.Email}
                       onChange={handleChange}
+                      class="text"
                     />
                   </div>
                 </div>
@@ -253,9 +263,10 @@ export const Profile = () => {
                     <input
                       aria-describedby="the_reason"
                       type="number"
-                      autocomplete="off"
+                      autoComplete="off"
                       name="Phonenumber"
                       id="Phonenumber"
+                      placeholder={ProfileData.Phonenumber}
                       value={formValue.Phonenumber}
                       onChange={handleChange}
                       class="text"
@@ -321,7 +332,7 @@ export const Profile = () => {
                     <input
                       aria-describedby="the_reason"
                       type="date"
-                      autocomplete="off"
+                      autoComplete="off"
                       name="DOB"
                       id="DOB"
                       value={formValue.DOB}
@@ -338,9 +349,10 @@ export const Profile = () => {
                     <input
                       aria-describedby="the_reason"
                       type="text"
-                      autocomplete="off"
+                      autoComplete="off"
                       name="Address"
                       id="Address"
+                      placeholder={ProfileData.Address}
                       value={formValue.Address}
                       onChange={handleChange}
                       class="text"
@@ -356,9 +368,10 @@ export const Profile = () => {
                     <input
                       aria-describedby="the_reason"
                       type="text"
-                      autocomplete="off"
+                      autoComplete="off"
                       name="City"
                       id="City"
+                      placeholder={ProfileData.City}
                       value={formValue.City}
                       onChange={handleChange}
                       class="text"
@@ -374,9 +387,10 @@ export const Profile = () => {
                     <input
                       aria-describedby="the_reason"
                       type="text"
-                      autocomplete="off"
+                      autoComplete="off"
                       name="Country"
                       id="Country"
+                      placeholder={ProfileData.Country}
                       value={formValue.Country}
                       onChange={handleChange}
                       class="text"

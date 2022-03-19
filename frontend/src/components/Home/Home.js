@@ -13,8 +13,9 @@ import ImageListItem from "@mui/material/ImageListItem";
 import ImageListItemBar from "@mui/material/ImageListItemBar";
 import IconButton from "@mui/material/IconButton";
 import HeartIcon from "@mui/icons-material/Favorite";
-import Product from "./Product";
 import { useNavigate } from "react-router-dom";
+import Heart from "react-animated-heart";
+
 
 function Home() {
   const [currencyvalue, setcurrencyValue] = useState("USD");
@@ -76,8 +77,8 @@ function Home() {
   const [flag, setFlag] = useState(false);
   const navigate = useNavigate();
 
-  const fetchItemImages = async () => {
-    await axios.get("http://localhost:8000/getProducts").then((response) => {
+  const fetchItemImages = () => {
+    axios.get("http://localhost:8000/getProducts").then((response) => {
       setItemData(response.data);
       // itemData = JSON.parse(itemData);
     });

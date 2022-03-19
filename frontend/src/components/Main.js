@@ -10,6 +10,7 @@ import NavBar from "./NavBar/NavBar";
 import Cart from "./Cart/Cart";
 import Favourite from "./Favourite/Favourite";
 import Product from "./Home/Product";
+import History from "./OrderHistory/History";
 import { Nav } from "react-bootstrap";
 
 class Main extends Component {
@@ -27,6 +28,7 @@ class Main extends Component {
             <Route path="/cart" element={<Cart />} />
             <Route path="/favourite" element={<Favourite />} />
             <Route path="/product" element={<Product />} />
+            <Route path="/orderhistory" element={<History />} />
           </Routes>
         </BrowserRouter>
       </div>

@@ -14,8 +14,13 @@ import { mobile } from "../../responsive";
 import EuroIcon from "@mui/icons-material/Euro";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+import { useDispatch } from "react-redux";
+import { addProduct } from "../../Redux/cartRedux";
+import { useNavigate } from "react-router-dom";
+import cookie from "react-cookies";
 
 const Product = () => {
+  const navigate = useNavigate();
   const [currencyvalue, setcurrencyValue] = useState("USD");
   let currencySymbol = null;
   if (currencyvalue === "USD") {
@@ -30,8 +35,27 @@ const Product = () => {
   //     ImageName: "ITEM",
   //   };
   const [itemDetails, setItemDetails] = useState({});
-  const [itemCount, setItemCount] = useState(1);
+  const [quantity, setQuantity] = useState(1);
   const { state } = useLocation();
+  const dispatch = useDispatch();
+
+  const handleAddToCart = () => {
+    if (cookie.load("cookie")) {
+      dispatch(
+        addProduct({
+          itemDetails,
+          quantity,
+          price: parseFloat(itemDetails.Price) * parseInt(quantity),
+        })
+      );
+      navigate("/cart");
+    } else {
+      alert("Please Sign In to Continue Shopping!");
+    }
+  };
+  const handleCount = (event) => {
+    setQuantity(parseInt(event.target.value));
+  };
 
   useEffect(() => {
     const fetchProductData = async () => {
@@ -47,7 +71,7 @@ const Product = () => {
         });
     };
     fetchProductData().catch(console.error);
-    console.log(itemDetails);
+    // console.log(itemDetails);
   }, [state]);
 
   let qtyarray = [];
@@ -168,7 +192,11 @@ const Product = () => {
                 <label for="qty">Quantity</label>
               </h3>
 
-              <select style={{ width: "60%" }}>
+              <select
+                onChange={handleCount}
+                value={quantity}
+                style={{ width: "60%" }}
+              >
                 {qtyarray.map((num) => (
                   <option>{num}</option>
                 ))}
@@ -192,6 +220,7 @@ const Product = () => {
                 variant="dark"
                 type="submit"
                 style={{ height: "40px", width: "500px" }}
+                onClick={handleAddToCart}
               >
                 Add To Cart
               </Button>

@@ -5,6 +5,7 @@ import { Button } from "react-bootstrap";
 const LogoutSignoutButton = () => {
   const handleClick = () => {
     cookie.remove("cookie", { path: "/" });
+    cookie.remove("ProfileDetails", { path: "/" });
   };
   return (
     <div>
