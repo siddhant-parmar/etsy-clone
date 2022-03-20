@@ -14,6 +14,7 @@ import ShopItemFormEdit from "./ShopItemFormEdit";
 import NavBar from "../NavBar/NavBar";
 import Footer from "../Footer/Footer";
 import cookie from "react-cookies";
+import { API } from "../../backend";
 
 function ShopPage() {
   const navigate = useNavigate();
@@ -38,30 +39,24 @@ function ShopPage() {
   useEffect(() => {
     let isSubscribed = true;
     const fetchAllShopData = async () => {
-      let responseShop = await axios.get("http://localhost:8000/shop/details", {
+      let responseShop = await axios.get(API + "/shop/details", {
         params: {
           ShopName: state,
         },
       });
       await setShopData(responseShop.data);
 
-      let responseOwnerDetails = await axios.get(
-        "http://localhost:8000/profile",
-        {
-          params: {
-            ProfileId: ProfileId,
-          },
-        }
-      );
+      let responseOwnerDetails = await axios.get(API + "/profile", {
+        params: {
+          ProfileId: ProfileId,
+        },
+      });
       setOwnerData(responseOwnerDetails.data[0]);
-      let responseShopItems = await axios.get(
-        "http://localhost:8000/shop/items",
-        {
-          params: {
-            ShopId: responseShop.data.ShopId,
-          },
-        }
-      );
+      let responseShopItems = await axios.get(API + "/shop/items", {
+        params: {
+          ShopId: responseShop.data.ShopId,
+        },
+      });
       setShopItems(responseShopItems.data);
       console.log(JSON.stringify(responseShopItems.data));
 
@@ -72,20 +67,17 @@ function ShopPage() {
       //   console.log(totalSold);
       setTotalSales(totalSold);
 
-      let responseIsOwner = await axios.get(
-        "http://localhost:8000/shop/check-owner",
-        {
-          params: {
-            ShopId: responseShop.data.ShopId,
-            ProfileId: ProfileId,
-          },
-        }
-      );
+      let responseIsOwner = await axios.get(API + "/shop/check-owner", {
+        params: {
+          ShopId: responseShop.data.ShopId,
+          ProfileId: ProfileId,
+        },
+      });
       console.log("IsOwner:  " + responseIsOwner.data);
       setIsOwner(responseIsOwner.data);
 
       await axios
-        .get("http://localhost:8000/download-photo/", {
+        .get(API + "/download-photo/", {
           params: {
             file: ownerData.ProfileImage,
           },
@@ -110,18 +102,12 @@ function ShopPage() {
     var profilePhoto = event.target.files[0];
     var data = new FormData();
     data.append("photos", profilePhoto);
-    let response = await axios.post(
-      "http://localhost:8000/shop/upload-photo",
-      data
-    );
+    let response = await axios.post(API + "/shop/upload-photo", data);
     var dataToPost = {
       ShopImage: response.data,
       ShopId: shopData.ShopId,
     };
-    let responseImage = await axios.post(
-      "http://localhost:8000/shop/add-photo",
-      dataToPost
-    );
+    let responseImage = await axios.post(API + "/shop/add-photo", dataToPost);
     shopData.ShopImage = responseImage.data;
     // console.log(shopData.ShopImage);
     setShopData(shopData);
@@ -300,5 +286,3 @@ function ShopPage() {
 }
 
 export default ShopPage;
-
-

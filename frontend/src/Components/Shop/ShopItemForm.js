@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Button, Col, Form, Modal, Row } from "react-bootstrap";
+import { API } from "../../backend";
 
 function ShopItemForm(props) {
   const [itemForm, setItemForm] = useState({
@@ -17,10 +18,7 @@ function ShopItemForm(props) {
       var itemPhoto = event.target.files[0];
       var data = new FormData();
       data.append("photos", itemPhoto);
-      let response = await axios.post(
-        "http://localhost:8000/item/upload-photo",
-        data
-      );
+      let response = await axios.post(API + "/item/upload-photo", data);
       console.log(response.data);
       setItemForm({
         ...itemForm,
@@ -38,7 +36,7 @@ function ShopItemForm(props) {
   const handleItemSubmit = async (e) => {
     e.preventDefault();
     console.log(itemForm.ShopId);
-    await axios.post("http://localhost:8000/item/add", itemForm);
+    await axios.post(API + "/item/add", itemForm);
     window.location.reload(false);
   };
   return (

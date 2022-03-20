@@ -12,6 +12,8 @@ import {
 import LoginSignupButton from "../Pages/LoginSignupButton";
 import LogoutSignoutButton from "../Pages/LogoutSignoutButton";
 import cookie from "react-cookies";
+import { API } from "../../backend";
+
 
 class NavBar extends Component {
   render() {

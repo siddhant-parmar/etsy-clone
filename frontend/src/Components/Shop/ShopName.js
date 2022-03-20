@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import NavBar from "../NavBar/NavBar";
 import Footer from "../Footer/Footer";
 import cookie from "react-cookies";
+import { API } from "../../backend";
 
 function ShopName() {
   const navigate = useNavigate();
@@ -20,14 +21,11 @@ function ShopName() {
 
   useEffect(() => {
     const fetchIfShopExists = async () => {
-      let response = await axios.get(
-        "http://localhost:8000/check-shop-exists",
-        {
-          params: {
-            ProfileId: ProfileId,
-          },
-        }
-      );
+      let response = await axios.get(API + "/check-shop-exists", {
+        params: {
+          ProfileId: ProfileId,
+        },
+      });
       if (response.data !== "Not Found") {
         navigate("/your-shop", {
           state: response.data,
@@ -38,7 +36,7 @@ function ShopName() {
   }, [navigate]);
 
   let checkShopName = async () => {
-    let response = await axios.get("http://localhost:8000/check-shop-name", {
+    let response = await axios.get(API + "/check-shop-name", {
       params: {
         ProfileId: ProfileId,
         nameToCheck: shopName,
@@ -52,7 +50,7 @@ function ShopName() {
       ProfileId: ProfileId,
       nameToAdd: shopName,
     };
-    await axios.post("http://localhost:8000/add-shop-name", data);
+    await axios.post(API + "/add-shop-name", data);
     navigate("/your-shop", {
       state: shopName,
     });

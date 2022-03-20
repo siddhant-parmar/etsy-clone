@@ -18,6 +18,7 @@ import { purchase } from "../../Redux/purchaseRedux";
 import moment from "moment";
 import cookie from "react-cookies";
 import Profile from "../Profile/Profile";
+import { API } from "../../backend";
 
 const Container = styled.div``;
 
@@ -176,11 +177,11 @@ const Cart = () => {
       temp[0].ProfileId = ProfileId;
       // console.log([temp]);
       // for (var i = 0; i < itemDetails.length; i++) {
-      axios.post("http://localhost:8000/purchase", [temp]).then((response) => {
+      axios.post( API + "/purchase", [temp]).then((response) => {
         console.log(response.data);
       });
       axios
-        .post("http://localhost:8000/updatequantity", [temp])
+        .post( API + "/updatequantity", [temp])
         .then((response) => {
           console.log(response.data);
         });

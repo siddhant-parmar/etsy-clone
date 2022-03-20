@@ -3,6 +3,8 @@ import React, { Component } from "react";
 import axios from "axios";
 import cookie from "react-cookies";
 import { Navigate } from "react-router";
+import { API } from "../../backend";
+
 // import Header from '../Header/Header';
 
 class Login extends Component {
@@ -45,7 +47,7 @@ class Login extends Component {
       axios.defaults.withCredentials = true;
 
       axios
-        .post("http://localhost:8000/login", data)
+        .post( API + "/login", data)
         .then((response) => {
           if (response.status === 200) {
             this.setState({

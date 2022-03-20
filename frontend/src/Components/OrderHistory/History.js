@@ -12,6 +12,7 @@ import ImageListItemBar from "@mui/material/ImageListItemBar";
 import IconButton from "@mui/material/IconButton";
 import HeartIcon from "@mui/icons-material/Favorite";
 import { useState } from "react";
+import { API } from "../../backend";
 
 const History = () => {
   const [currencyvalue, setcurrencyValue] = useState("USD");
@@ -27,12 +28,10 @@ const History = () => {
   const ProfileId = cookie.load("cookie");
   //   console.log(ProfileId);
   useEffect(() => {
-    axios
-      .post("http://localhost:8000/history", { ProfileId: ProfileId })
-      .then((response) => {
-        console.log(response.data);
-        setData(response.data);
-      });
+    axios.post(API + "/history", { ProfileId: ProfileId }).then((response) => {
+      console.log(response.data);
+      setData(response.data);
+    });
   }, []);
   //   console.log(purchaseData);
   //   const temp = [];
@@ -83,7 +82,7 @@ const History = () => {
           <div class="table-responsive">
             <table class="table table-bordered table-hover">
               <thead>
-                <tr >
+                <tr>
                   <td class="text-center">Order ID</td>
                   <td class="text-right">Item</td>
                   <td class="text-center">Name</td>

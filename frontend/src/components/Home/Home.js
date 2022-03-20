@@ -15,6 +15,8 @@ import IconButton from "@mui/material/IconButton";
 import HeartIcon from "@mui/icons-material/Favorite";
 import { useNavigate } from "react-router-dom";
 import Favourite from "../Pages/Favourite";
+import { API } from "../../backend";
+
 
 function Home() {
   const [currencyvalue, setcurrencyValue] = useState("USD");
@@ -77,13 +79,13 @@ function Home() {
   const navigate = useNavigate();
 
   const fetchItemImages = () => {
-    axios.get("http://localhost:8000/getProducts").then((response) => {
+    axios.get( API + "/getProducts").then((response) => {
       setItemData(response.data);
       // itemData = JSON.parse(itemData);
     });
   };
   const fetchUserDetails = async () => {
-    await axios.get("http://localhost:8000/home").then((response) => {
+    await axios.get( API + "/home").then((response) => {
       var stringify = JSON.stringify(response.data.user_details[0].Name);
       // console.log(
       // "JADBFNJI: " + JSON.stringify(response.data.user_details[0].Name)

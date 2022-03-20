@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Heart from "react-animated-heart";
 import "../Home/home.css";
 import cookie from "react-cookies";
+import { API } from "../../backend";
 
 function Favourite(props) {
   // console.log(props);
@@ -13,7 +14,7 @@ function Favourite(props) {
   useEffect(() => {
     let isSubscribed = true;
     const fetchFavourites = async () => {
-      let responseData = await axios.get("http://localhost:8000/favourites", {
+      let responseData = await axios.get(API + "/favourites", {
         params: {
           ProfileId: ProfileId,
         },
@@ -44,7 +45,7 @@ function Favourite(props) {
           Item: props.data,
           isDelete: true,
         };
-        axios.post("http://localhost:8000/set-remove-favourite", data);
+        axios.post(API + "/set-remove-favourite", data);
       } else {
         setFavourite(true);
         data = {
@@ -52,7 +53,7 @@ function Favourite(props) {
           Item: props.data,
           isDelete: false,
         };
-        axios.post("http://localhost:8000/set-remove-favourite", data);
+        axios.post(API + "/set-remove-favourite", data);
       }
     } else {
       alert("Sign in to Add Favourites");

@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import { Button } from "react-bootstrap";
 import cookie from "react-cookies";
+import {API} from "../../backend";
 
 const Favourite = () => {
   const navigate = useNavigate();
@@ -30,7 +31,7 @@ const Favourite = () => {
     const ProfileId = cookie.load("cookie");
     // console.log(ProfileId);
     const fetchUserData = async () => {
-      let responseData = await axios.get("http://localhost:8000/profile", {
+      let responseData = await axios.get( API + "/profile", {
         params: {
           ProfileId: ProfileId,
         },
@@ -40,7 +41,7 @@ const Favourite = () => {
     };
     const fetchFavourites = async () => {
       let responseData = await axios.get(
-        "http://localhost:8000/favouritesImages",
+         API + "/favouritesImages",
         {
           params: {
             Id: ProfileId,
@@ -52,7 +53,7 @@ const Favourite = () => {
     };
     
     axios
-      .get("http://localhost:8000/download-photo/", {
+      .get( API + "/download-photo/", {
         params: {
           file: userData.ProfileImage,
         },

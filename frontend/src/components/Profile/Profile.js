@@ -6,7 +6,7 @@ import cookie from "react-cookies";
 import { useState } from "react";
 import Footer from "../Footer/Footer";
 import { useNavigate } from "react-router-dom";
-
+import { API } from "../../backend";
 export const Profile = () => {
   const navigate = useNavigate();
   const id = cookie.load("ProfileDetails");
@@ -28,7 +28,7 @@ export const Profile = () => {
   });
   useEffect(() => {
     axios
-      .get("http://localhost:8000/profile", {
+      .get( API + "/profile", {
         params: {
           ProfileId: id.ProfileId,
         },
@@ -60,7 +60,7 @@ export const Profile = () => {
         }
 
         axios
-          .get("http://localhost:8000/download-photo/", {
+          .get( API + "/download-photo/", {
             params: {
               file: data.ProfileImage,
             },
@@ -83,7 +83,7 @@ export const Profile = () => {
   //     // const token = local["user"];
   //     console.log("Inside useEffect profile" + local.user.token);
   //     axios
-  //       .get("http://localhost:8000/profile", {
+  //       .get( API + "/profile", {
   //         params: {
   //           token: token,
   //         },
@@ -118,7 +118,7 @@ export const Profile = () => {
       var profilePhoto = event.target.files[0];
       var data = new FormData();
       data.append("photos", profilePhoto);
-      let responseData = axios.post("http://localhost:8000/upload-photo", data);
+      let responseData = axios.post( API + "/upload-photo", data);
       setformValue({
         ...formValue,
         [event.target.name]: profilePhoto.name,
@@ -145,7 +145,7 @@ export const Profile = () => {
       ProfileImage: formValue.ProfileImage,
       Phonenumber: formValue.Phonenumber,
     };
-    axios.post("http://localhost:8000/profile", data).then((response) => {
+    axios.post( API + "/profile", data).then((response) => {
       if (response.status === 200) {
         console.log("TESTING SUCCESS");
       }

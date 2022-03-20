@@ -17,6 +17,7 @@ import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import { useDispatch } from "react-redux";
 import { addProduct } from "../../Redux/cartRedux";
 import { useNavigate } from "react-router-dom";
+import { API } from "../../backend";
 
 const Product = () => {
   const navigate = useNavigate();
@@ -56,7 +57,7 @@ const Product = () => {
   useEffect(() => {
     const fetchProductData = async () => {
       await axios
-        .get("http://localhost:8000/productDetails", {
+        .get( API + "/productDetails", {
           params: { ItemId: state },
         })
         .then((response) => {

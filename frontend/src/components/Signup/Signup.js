@@ -1,6 +1,8 @@
 import { React, useState } from "react";
 import { Form, Button, Alert } from "react-bootstrap";
 import axios from "axios";
+import { API } from "../../backend";
+
 
 const Signup = () => {
   const [formValue, setformValue] = useState({
@@ -15,7 +17,7 @@ const Signup = () => {
       password: formValue.password,
       name: formValue.name,
     };
-    axios.post("http://localhost:8000/signup", data).then((response) => {
+    axios.post( API + "/signup", data).then((response) => {
       if (response.status === 200) {
         Alert("");
       }
