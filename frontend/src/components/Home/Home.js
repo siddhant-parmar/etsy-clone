@@ -14,8 +14,7 @@ import ImageListItemBar from "@mui/material/ImageListItemBar";
 import IconButton from "@mui/material/IconButton";
 import HeartIcon from "@mui/icons-material/Favorite";
 import { useNavigate } from "react-router-dom";
-import Heart from "react-animated-heart";
-
+import Favourite from "../Pages/Favourite";
 
 function Home() {
   const [currencyvalue, setcurrencyValue] = useState("USD");
@@ -28,9 +27,9 @@ function Home() {
     currencySymbol = <CurrencyRupeeIcon />;
   }
   axios.defaults.withCredentials = true;
-  const [username, setUsername] = useState("");
   let userPanel = null;
-  if (cookie.load("cookie")) {
+  const [userName, setUsername] = useState("");
+  if (cookie.load("ProfileDetails")) {
     userPanel = (
       //   <div>
       //     <center>
@@ -40,7 +39,7 @@ function Home() {
 
       <Card.Body>
         <Card.Text style={{ fontSize: "50px", fontFamily: "Times New Roman" }}>
-          Welcome back, <a href="/profile">{username}</a>!
+          Welcome back, <a href="/profile">{userName}</a>!
         </Card.Text>
       </Card.Body>
     );
@@ -86,13 +85,16 @@ function Home() {
   const fetchUserDetails = async () => {
     await axios.get("http://localhost:8000/home").then((response) => {
       var stringify = JSON.stringify(response.data.user_details[0].Name);
+      console.log(
+        "JADBFNJI: " + JSON.stringify(response.data.user_details[0].Name)
+      );
       setUsername(stringify.slice(1, -1));
       // setUserPanel;
     });
   };
   useEffect(() => {
-    fetchUserDetails();
     fetchItemImages();
+    fetchUserDetails();
   }, []);
 
   const displayProduct = (e) => {
@@ -103,7 +105,7 @@ function Home() {
 
   return (
     <div>
-      <div className="content-container" style={{ height: "1500px" }}>
+      <div className="content-container" style={{ height: "2000px" }}>
         <NavBar />
         <Card
           style={{
@@ -117,7 +119,7 @@ function Home() {
         {/* {currencySymbol}
         {currencyvalue} */}
 
-        <ImageList sx={{ padding: "60px" }}>
+        <ImageList sx={{ width: "100%", height: 1500 }}>
           <ImageListItem key="Subheader" cols={4}></ImageListItem>
           {itemData.map((item) => (
             <ImageListItem
@@ -138,10 +140,10 @@ function Home() {
                 position="below"
                 actionIcon={
                   <IconButton sx={{ color: "#ff0000" }}>
-                    <HeartIcon />
+                    <Favourite data={item}></Favourite>
                   </IconButton>
                 }
-              />
+              ></ImageListItemBar>
             </ImageListItem>
           ))}
         </ImageList>

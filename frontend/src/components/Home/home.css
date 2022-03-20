@@ -13,3 +13,14 @@ a:active {
   left: 0;
   bottom: 0;
 }
+
+.MuiSlider-root {
+  color: #20b2aa;
+}
+
+.scaled {
+  height: 80px;
+  width: 90px;
+  transform: scale(0.8); /* Equal to scaleX(2) scaleY(0.5) */
+  transform-origin: top;
+}

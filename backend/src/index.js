@@ -12,7 +12,8 @@ const session = require("express-session");
 
 const path = require("path");
 const fs = require("fs");
-
+const multer = require("multer");
+const crypto = require("crypto");
 const { v4: uuidv4 } = require("uuid");
 
 app.use(cookieParser());
@@ -173,7 +174,6 @@ app.post("/signup", function (req, res) {
       });
       console.log("Error in creating connection!");
       res.end("Error in creating connection!");
-      console.log("Error");
     } else {
       const hashedPassword = bcrypt.hashSync(req.body.password, saltRounds);
       var sql =
@@ -309,6 +309,38 @@ app.get("/productDetails", function (req, res) {
   });
 });
 
+app.get("/profile", function (req, res) {
+  console.log("Inside profile GET");
+  console.log("Request Body: " + JSON.stringify(req.query.ProfileId));
+  connection.getConnection(function (err, conn) {
+    if (err) {
+      // res.writeHead(400, {
+      //   "Content-type": "text/plain",
+      // });
+      console.log("Error in creating connection!");
+      res.end("Error in creating connection!");
+      console.log("Error");
+    } else {
+      var Id = JSON.stringify(req.query.ProfileId);
+      var sql = "SELECT * from login_credentials WHERE ProfileId = " + Id + ";";
+      conn.query(sql, function (err, result) {
+        if (err) {
+          // res.writeHead(400, {
+          //   "Content-Type": "text/plain",
+          // });
+          res.end("ERROR");
+          console.log("Error: " + err);
+        } else {
+          // res.writeHead(200, {
+          //   "Content-type": "text/plain",
+          // });
+          res.end(JSON.stringify(result));
+        }
+      });
+    }
+  });
+});
+
 app.post("/profile", function (req, res) {
   console.log("Inside profile POST");
   console.log("Profile Id: " + JSON.stringify(req.body.ProfileId));
@@ -354,7 +386,7 @@ app.post("/profile", function (req, res) {
             "Content-Type": "text/plain",
           });
           res.end("ERROR");
-          console.log("Error: " + err);
+          console.log("Error in Profile POST: " + err);
         } else {
           res.writeHead(200, {
             "Content-type": "text/plain",
@@ -462,4 +494,228 @@ app.post("/history", function (req, res) {
       });
     }
   });
+});
+
+app.get("/favourites", function (req, res) {
+  console.log("Inside favourites POST");
+  const Id = parseInt(req.query.ProfileId);
+  console.log("Request Body: " + Id);
+  connection.getConnection(function (err, conn) {
+    if (err) {
+      console.log("Error in creating connection!");
+      // res.writeHead(400, {
+      //   "Content-type": "text/plain",
+      // });
+      res.end("Error in creating connection!");
+    } else {
+      //Login validation query
+      var sql = "SELECT * from favourites WHERE ProfileId = '" + Id + "';";
+      conn.query(sql, function (err, result) {
+        if (err) {
+          // res.writeHead(400, {
+          //   "Content-Type": "text/plain",
+          // });
+          res.end("ERROR");
+          console.log("Error: " + err);
+          s;
+        } else {
+          // res.writeHead(200, {
+          //   "Content-type": "text/plain",
+          // });
+          // for (const [key, item] of Object.entries(result)) {
+          //   var file = item.ImageName;
+          //   var filetype = file.split(".").pop();
+          //   console.log(file);
+          //   var filelocation = path.join(__dirname + "/../src/uploads", file);
+          //   var img = fs.readFileSync(filelocation);
+          //   var base64img = new Buffer(img).toString("base64");
+          //   item.ItemImage = "data:image/" + filetype + ";base64," + base64img;
+          // }
+          // console.log("dsnjvndsjivni: " + JSON.stringify(result));
+          res.send(result);
+        }
+      });
+    }
+  });
+});
+
+app.post("/set-remove-favourite", function (req, res) {
+  console.log("Inside set-remove-favourites POST");
+  console.log(req.body.Item);
+  connection.getConnection(function (err, conn) {
+    if (err) {
+      console.log("Error in creating connection!");
+      // res.writeHead(400, {
+      //   "Content-type": "text/plain",
+      // });
+      res.end("Error in creating connection!");
+    } else {
+      var sql;
+      //Login validation query
+      if (!req.body.isDelete) {
+        sql =
+          "INSERT into favourites (ProfileId, ItemId, ItemName, ShopName, Category, ImageName, Price, QuantityAvailable, QuantitySold, Description) VALUES ('" +
+          req.body.ProfileId +
+          "', '" +
+          req.body.Item.ItemId +
+          "', '" +
+          req.body.Item.ItemName +
+          "', '" +
+          req.body.Item.ShopId +
+          "', '" +
+          req.body.Item.Category +
+          "', '" +
+          req.body.Item.ImageName +
+          "', '" +
+          req.body.Item.Price +
+          "', '" +
+          req.body.Item.QuantityAvailable +
+          "', '" +
+          req.body.Item.QuantitySold +
+          "', '" +
+          req.body.Item.Description +
+          "');";
+      } else {
+        sql =
+          "DELETE from favourites WHERE ItemId = " +
+          req.body.Item.ItemId +
+          " AND ProfileId = " +
+          req.body.ProfileId +
+          ";";
+      }
+
+      conn.query(sql, function (err, result) {
+        if (err) {
+          // res.writeHead(400, {
+          //   "Content-Type": "text/plain",
+          // });
+          res.end("ERROR");
+          console.log("Error: " + err);
+        } else {
+          // res.writeHead(200, {
+          //   "Content-type": "text/plain",
+          // });
+          // for (const [key, item] of Object.entries(result)) {
+          //   var file = item.ImageName;
+          //   var filetype = file.split(".").pop();
+          //   console.log(file);
+          //   var filelocation = path.join(__dirname + "/../src/uploads", file);
+          //   var img = fs.readFileSync(filelocation);
+          //   var base64img = new Buffer(img).toString("base64");
+          //   item.ItemImage = "data:image/" + filetype + ";base64," + base64img;
+          // }
+          res.send(result);
+        }
+      });
+    }
+  });
+});
+
+app.get("/favouritesImages", function (req, res) {
+  console.log("Inside favourites images GET");
+  const Id = parseInt(req.query.Id);
+  console.log("Request Body: " + Id);
+  connection.getConnection(function (err, conn) {
+    if (err) {
+      console.log("Error in creating connection!");
+      // res.writeHead(400, {
+      //   "Content-type": "text/plain",
+      // });
+      res.end("Error in creating connection!");
+    } else {
+      //Login validation query
+      var sql = "SELECT * from favourites WHERE ProfileId = '" + Id + "';";
+      conn.query(sql, function (err, result) {
+        if (err) {
+          // res.writeHead(400, {
+          //   "Content-Type": "text/plain",
+          // });
+          res.end("ERROR");
+          console.log("Error: " + err);
+        } else {
+          // res.writeHead(200, {
+          //   "Content-type": "text/plain",
+          // });
+          for (const [key, item] of Object.entries(result)) {
+            var file = item.ImageName;
+            var filetype = file.split(".").pop();
+            console.log(file);
+            var filelocation = path.join(__dirname + "/../src/uploads", file);
+            var img = fs.readFileSync(filelocation);
+            var base64img = new Buffer(img).toString("base64");
+            item.ItemImage = "data:image/" + filetype + ";base64," + base64img;
+          }
+          res.send(result);
+        }
+      });
+    }
+  });
+});
+
+const storage = multer.diskStorage({
+  destination: "./public/uploads/",
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  },
+  // filename: function (req, file, cb) {
+  //   if (
+  //     file.mimetype !== "image/png" &&
+  //     file.mimetype !== "image/jpg" &&
+  //     file.mimetype !== "image/jpeg"
+  //   ) {
+  //     var err = new Error();
+  //     err.code = "filetype";
+  //     return cb(err);
+  //   } else {
+  //     var fileName = crypto.randomBytes(10).toString("hex");
+  //     file.filename = fileName;
+  //     cb(null, fileName + ".jpg");
+  //   }
+  // },
+});
+
+const upload = multer({
+  storage: storage,
+  //   limits: { fileSize: 10000000 },
+  fileFilter: function (req, file, cb) {
+    checkFileType(file, cb);
+  },
+});
+
+// Check File Type
+function checkFileType(file, cb) {
+  // Allowed ext
+  const filetypes = /jpeg|jpg|png|gif/;
+  // Check ext
+  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+  // Check mime
+  const mimetype = filetypes.test(file.mimetype);
+
+  if (mimetype && extname) {
+    return cb(null, true);
+  } else {
+    cb("Error: Images Only!");
+  }
+}
+
+//uploading photo
+app.post("/upload-photo", upload.single("photos"), (req, res) => {
+  console.log("Request Body from upload DP: ", req.body);
+  res.end(res.req.file.filename);
+});
+
+app.get("/download-photo/", (req, res) => {
+  console.log("Inside Download File" + req.query.file);
+  var file = req.query.file;
+
+  var filetype = file.split(".").pop();
+
+  var filelocation = path.join(__dirname + "/../public/uploads", file);
+  var img = fs.readFileSync(filelocation);
+  var base64img = new Buffer(img).toString("base64");
+  res.writeHead(200, {
+    "Content--type": "image/" + filetype,
+  });
+  // console.log(base64img);
+  res.end("data:image/" + filetype + ";base64," + base64img);
 });

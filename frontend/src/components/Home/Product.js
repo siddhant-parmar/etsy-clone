@@ -17,7 +17,6 @@ import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import { useDispatch } from "react-redux";
 import { addProduct } from "../../Redux/cartRedux";
 import { useNavigate } from "react-router-dom";
-import cookie from "react-cookies";
 
 const Product = () => {
   const navigate = useNavigate();
@@ -40,18 +39,14 @@ const Product = () => {
   const dispatch = useDispatch();
 
   const handleAddToCart = () => {
-    if (cookie.load("cookie")) {
-      dispatch(
-        addProduct({
-          itemDetails,
-          quantity,
-          price: parseFloat(itemDetails.Price) * parseInt(quantity),
-        })
-      );
-      navigate("/cart");
-    } else {
-      alert("Please Sign In to Continue Shopping!");
-    }
+    dispatch(
+      addProduct({
+        itemDetails,
+        quantity,
+        price: parseFloat(itemDetails.Price) * parseInt(quantity),
+      })
+    );
+    navigate("/cart");
   };
   const handleCount = (event) => {
     setQuantity(parseInt(event.target.value));

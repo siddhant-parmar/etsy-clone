@@ -170,80 +170,20 @@ const Cart = () => {
   };
   // console.log("TEST MESSAGE: " + JSON.stringify(cart.products[1]));
   const handleCheckout = () => {
-    var temp = JSON.parse(JSON.stringify(itemDetails));
-    temp[0].ProfileId = ProfileId;
-    // console.log([temp]);
-    // for (var i = 0; i < itemDetails.length; i++) {
-    axios.post("http://localhost:8000/purchase", [temp]).then((response) => {
-      console.log(response.data);
-    });
-    // }
-
-    navigate("/orderhistory");
+    if (cookie.load("cookie")) {
+      var temp = JSON.parse(JSON.stringify(itemDetails));
+      temp[0].ProfileId = ProfileId;
+      // console.log([temp]);
+      // for (var i = 0; i < itemDetails.length; i++) {
+      axios.post("http://localhost:8000/purchase", [temp]).then((response) => {
+        console.log(response.data);
+      });
+      navigate("/orderhistory");
+    } else {
+      alert("Please Sign in to Proceed to Checkout!");
+    }
   };
-  let Body = (
-    <SummaryTitle>
-      <br />
-      <center>
-        <b>OOPS... Your Cart is Empty!</b>
-      </center>
-    </SummaryTitle>
-  );
-  if (cart.products.length != 0) {
-    <Bottom>
-      <Info>
-        {cart.products.map((product, index) => (
-          <Product>
-            <ProductDetail>
-              <img
-                style={{ height: 250, width: 250 }}
-                src={product.ItemImage}
-                alt={product.ItemName}
-              ></img>
-              <Details>
-                <ProductName>
-                  <b>{product.ItemName}</b>
-                  <p>{product.Description}</p>
-                </ProductName>
-              </Details>
-            </ProductDetail>
-            <PriceDetail>
-              <ProductAmountContainer>
-                <ProductAmount>
-                  <b>Quantity: </b>
-                  {product.quantity}
-                </ProductAmount>
-              </ProductAmountContainer>
-              <ProductPrice>$ {product.Price * product.quantity}</ProductPrice>
-            </PriceDetail>
-          </Product>
-        ))}
-        <Hr />
-      </Info>
-      <Summary>
-        <SummaryTitle>ORDER SUMMARY</SummaryTitle>
-        <SummaryItem>
-          <SummaryItemText>Subtotal</SummaryItemText>
-          <SummaryItemPrice>$ {cart.total}</SummaryItemPrice>
-        </SummaryItem>
-        <SummaryItem>
-          <SummaryItemText>Estimated Shipping</SummaryItemText>
-          <SummaryItemPrice>$ 5.90</SummaryItemPrice>
-        </SummaryItem>
-        <SummaryItem>
-          <SummaryItemText>Shipping Discount</SummaryItemText>
-          <SummaryItemPrice>$ -5.90</SummaryItemPrice>
-        </SummaryItem>
-        <SummaryItem type="total">
-          <SummaryItemText>Total</SummaryItemText>
-          <SummaryItemPrice>$ {cart.total}</SummaryItemPrice>
-        </SummaryItem>
-        <TopButton onClick={handleCheckout} type="filled">
-          CHECKOUT
-        </TopButton>
-      </Summary>
-    </Bottom>;
-  }
+
   return (
     <div>
       <NavBar>New navigation</NavBar>
@@ -255,7 +195,61 @@ const Cart = () => {
             CHECKOUT NOW
           </TopButton>
         </Top>
-        {Body}
+        <Bottom>
+          <Info>
+            {cart.products.map((product, index) => (
+              <Product>
+                <ProductDetail>
+                  <img
+                    style={{ height: 250, width: 250 }}
+                    src={product.ItemImage}
+                    alt={product.ItemName}
+                  ></img>
+                  <Details>
+                    <ProductName>
+                      <b>{product.ItemName}</b>
+                      <p>{product.Description}</p>
+                    </ProductName>
+                  </Details>
+                </ProductDetail>
+                <PriceDetail>
+                  <ProductAmountContainer>
+                    <ProductAmount>
+                      <b>Quantity: </b>
+                      {product.quantity}
+                    </ProductAmount>
+                  </ProductAmountContainer>
+                  <ProductPrice>
+                    $ {product.Price * product.quantity}
+                  </ProductPrice>
+                </PriceDetail>
+              </Product>
+            ))}
+            <Hr />
+          </Info>
+          <Summary>
+            <SummaryTitle>ORDER SUMMARY</SummaryTitle>
+            <SummaryItem>
+              <SummaryItemText>Subtotal</SummaryItemText>
+              <SummaryItemPrice>$ {cart.total}</SummaryItemPrice>
+            </SummaryItem>
+            <SummaryItem>
+              <SummaryItemText>Estimated Shipping</SummaryItemText>
+              <SummaryItemPrice>$ 5.90</SummaryItemPrice>
+            </SummaryItem>
+            <SummaryItem>
+              <SummaryItemText>Shipping Discount</SummaryItemText>
+              <SummaryItemPrice>$ -5.90</SummaryItemPrice>
+            </SummaryItem>
+            <SummaryItem type="total">
+              <SummaryItemText>Total</SummaryItemText>
+              <SummaryItemPrice>$ {cart.total}</SummaryItemPrice>
+            </SummaryItem>
+            <TopButton onClick={handleCheckout} type="filled">
+              CHECKOUT
+            </TopButton>
+          </Summary>
+        </Bottom>
       </Wrapper>
       {/* <div className="content-container">
         <div>

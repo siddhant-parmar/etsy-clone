@@ -5,8 +5,11 @@ import "./Profile.css";
 import cookie from "react-cookies";
 import { useState } from "react";
 import Footer from "../Footer/Footer";
+import { useNavigate } from "react-router-dom";
 
 export const Profile = () => {
+  const navigate = useNavigate();
+  const id = cookie.load("ProfileDetails");
   const [ProfileData, setData] = useState(cookie.load("ProfileDetails"));
   const [currencyvalue, setcurrencyValue] = useState("USD");
   const [formValue, setformValue] = React.useState({
@@ -23,7 +26,55 @@ export const Profile = () => {
     Phonenumber: "",
     ProfileImagePreview: undefined,
   });
-  useEffect(() => {});
+  useEffect(() => {
+    axios
+      .get("http://localhost:8000/profile", {
+        params: {
+          ProfileId: id.ProfileId,
+        },
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          console.log(
+            "Inside useEffect profile" + JSON.stringify(response.data[0])
+          );
+          setData(response.data[0]);
+          // console.log(response.data);
+          var data = response.data[0];
+          setformValue({
+            ...formValue,
+            ProfileId: data.ProfileId,
+            Email: data.Email,
+            Name: data.Name,
+            DOB: data.DOB,
+            About: data.About,
+            Country: data.Country,
+            City: data.City,
+            Address: data.Address,
+            Gender: data.Gender,
+            ProfileImage: data.ProfileImage,
+            Phonenumber: data.Phonenumber,
+          });
+          console.log("Profile Photo Name: ", data.ProfileImage);
+        }
+
+        axios
+          .get("http://localhost:8000/download-photo/", {
+            params: {
+              file: data.ProfileImage,
+            },
+          })
+          .then((response) => {
+            console.log("TESSSSTTTTT: fevbsfb: " + response.data);
+            let imagePreview = response.data;
+            setformValue({
+              ...formValue,
+              ProfileImagePreview: imagePreview,
+            });
+            // console.log("preview: " + formValue.ProfileImagePreview);
+          });
+      });
+  }, []);
 
   //   useEffect(() => {
   //     const local = JSON.parse(localStorage.getItem("user"));
@@ -58,32 +109,18 @@ export const Profile = () => {
   //         console.log("Profile Photo Name: ", data.ProfileImage);
 
   //         //Download image
-  //         axios
-  //           .get("http://localhost:8000/profile/download-photo/", {
-  //             params: {
-  //               file: data.ProfileImage,
-  //             },
-  //           })
-  //           .then((response) => {
-  //             let imagePreview = "data:image/jpg;base64, " + response.data;
-  //             setformValue({
-  //               ...formValue,
-  //               ProfileImagePreview: imagePreview,
-  //             });
-  //             // console.log("preview: " + formValue.ProfileImagePreview);
-  //           });
-  //       });
-  //   }, []);
+
+  // }, []);
 
   const handleChange = (event) => {
     if (event.target.name === "ProfileImage") {
       var profilePhoto = event.target.files[0];
       var data = new FormData();
       data.append("photos", profilePhoto);
-      axios.post("http://localhost:8080/profile/upload-photo", data);
+      let responseData = axios.post("http://localhost:8000/upload-photo", data);
       setformValue({
         ...formValue,
-        [event.target.name]: profilePhoto.name,
+        [event.target.name]: responseData.data,
       });
     } else {
       setformValue({
@@ -91,8 +128,6 @@ export const Profile = () => {
         [event.target.name]: event.target.value,
       });
     }
-    let temp = cookie.load("ProfileDetails");
-    setData(temp);
   };
 
   const handleSubmit = (event) => {
@@ -109,19 +144,12 @@ export const Profile = () => {
       ProfileImage: formValue.ProfileImage,
       Phonenumber: formValue.Phonenumber,
     };
-
     axios.post("http://localhost:8000/profile", data).then((response) => {
       if (response.status === 200) {
         console.log("TESTING SUCCESS");
-        cookie.remove("ProfileDetails", { path: "/" });
-        cookie.save("ProfileDetails", JSON.stringify(data), {
-          maxAge: 360000,
-          httpOnly: false,
-          path: "/",
-        });
-        console.log(cookie.load("ProfileDetails"));
       }
     });
+    // navigate("/home");
   };
 
   let profileImageData = (
@@ -182,10 +210,7 @@ export const Profile = () => {
               <div className="your-etsy-header clear">
                 <h1>Your Public Profile</h1>
                 <p>Everything on this page can be seen by anyone</p>
-                <a
-                  className="view-profile btn-secondary small registration-hidden"
-                  href=""
-                >
+                <a className="view-profile btn-secondary small registration-hidden">
                   View Profile
                 </a>
               </div>
