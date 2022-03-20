@@ -1,13 +1,10 @@
-
 {
-    "DB":{
-        "host" : "etsy-database.cmrr60sg9okd.us-east-1.rds.amazonaws.com",
-        "username" : "admin",
-        "password" : "password",
-        "port" : 3306,
-        "database" : "etsy_schema"
-    },
-    // "frontEnd" : "http://localhost:3000"
-    "frontEnd" : "http://54.82.244.58:3000"
-    
+  "DB": {
+    "host": "etsy-database.cmrr60sg9okd.us-east-1.rds.amazonaws.com",
+    "username": "admin",
+    "password": "password",
+    "port": 3306,
+    "database": "etsy_schema"
+  },
+  "frontEnd": "http://54.82.244.58:3000"
 }
