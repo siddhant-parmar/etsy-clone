@@ -85,9 +85,9 @@ function Home() {
   const fetchUserDetails = async () => {
     await axios.get("http://localhost:8000/home").then((response) => {
       var stringify = JSON.stringify(response.data.user_details[0].Name);
-      console.log(
-        "JADBFNJI: " + JSON.stringify(response.data.user_details[0].Name)
-      );
+      // console.log(
+      // "JADBFNJI: " + JSON.stringify(response.data.user_details[0].Name)
+      // );
       setUsername(stringify.slice(1, -1));
       // setUserPanel;
     });
@@ -95,7 +95,7 @@ function Home() {
   useEffect(() => {
     fetchItemImages();
     fetchUserDetails();
-  }, []);
+  }, [userName]);
 
   const displayProduct = (e) => {
     navigate("/product", {

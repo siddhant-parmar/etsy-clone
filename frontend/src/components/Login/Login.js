@@ -57,7 +57,7 @@ class Login extends Component {
         })
         .catch((err) => {
           if (err) {
-            if (err.response.status === 401) {
+            if (err.response.status === 201) {
               this.setState({
                 validationError: true,
               });

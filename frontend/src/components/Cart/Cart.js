@@ -172,12 +172,18 @@ const Cart = () => {
   const handleCheckout = () => {
     if (cookie.load("cookie")) {
       var temp = JSON.parse(JSON.stringify(itemDetails));
+      console.log(temp);
       temp[0].ProfileId = ProfileId;
       // console.log([temp]);
       // for (var i = 0; i < itemDetails.length; i++) {
       axios.post("http://localhost:8000/purchase", [temp]).then((response) => {
         console.log(response.data);
       });
+      axios
+        .post("http://localhost:8000/updatequantity", [temp])
+        .then((response) => {
+          console.log(response.data);
+        });
       navigate("/orderhistory");
     } else {
       alert("Please Sign in to Proceed to Checkout!");

@@ -46,6 +46,7 @@ const Product = () => {
         price: parseFloat(itemDetails.Price) * parseInt(quantity),
       })
     );
+    axios.post("")
     navigate("/cart");
   };
   const handleCount = (event) => {

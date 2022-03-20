@@ -12,6 +12,8 @@ import Favourite from "./Favourite/Favourite";
 import Product from "./Home/Product";
 import History from "./OrderHistory/History";
 import { Nav } from "react-bootstrap";
+import ShopName from "./Shop/ShopName";
+import ShopPage from "./Shop/ShopPage";
 
 class Main extends Component {
   render() {
@@ -29,6 +31,8 @@ class Main extends Component {
             <Route path="/favourite" element={<Favourite />} />
             <Route path="/product" element={<Product />} />
             <Route path="/orderhistory" element={<History />} />
+            <Route path="/name-your-shop" element={<ShopName />} />
+            <Route path="/your-shop" element={<ShopPage />} />
           </Routes>
         </BrowserRouter>
       </div>

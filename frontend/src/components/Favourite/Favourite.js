@@ -50,20 +50,7 @@ const Favourite = () => {
       // console.log("SIDDDDDDD: " + responseData.data);
       setFavouritesList(responseData.data);
     };
-    //   const fetchShopData = async () => {
-    //     const local = JSON.parse(localStorage.getItem("user"));
-    //     const token = local.token;
-    //     let responseData = await axios.get(
-    //       "http://localhost:8000/shop/details-by-id",
-    //       {
-    //         params: {
-    //           token: token,
-    //         },
-    //       }
-    //     );
-    //     setFavouritesList(responseData.data);
-    //   };
-
+    
     axios
       .get("http://localhost:8000/download-photo/", {
         params: {

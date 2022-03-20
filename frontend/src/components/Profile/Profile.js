@@ -36,7 +36,8 @@ export const Profile = () => {
       .then((response) => {
         if (response.status === 200) {
           console.log(
-            "Inside useEffect profile" + JSON.stringify(response.data[0])
+            "Inside useEffect profile" +
+              JSON.stringify(response.data[0].ProfileImage)
           );
           setData(response.data[0]);
           // console.log(response.data);
@@ -120,7 +121,7 @@ export const Profile = () => {
       let responseData = axios.post("http://localhost:8000/upload-photo", data);
       setformValue({
         ...formValue,
-        [event.target.name]: responseData.data,
+        [event.target.name]: profilePhoto.name,
       });
     } else {
       setformValue({

@@ -118,7 +118,7 @@ app.post("/login", function (req, res) {
           } else if (
             !bcrypt.compareSync(req.body.password, result[0].Password)
           ) {
-            res.writeHead(401, {
+            res.writeHead(201, {
               "Content-type": "text/plain",
             });
             console.log("Invalid Credentials2!");
@@ -154,6 +154,7 @@ app.post("/login", function (req, res) {
         }
       });
     }
+    conn.release();
   });
 });
 
@@ -200,6 +201,7 @@ app.post("/signup", function (req, res) {
         }
       });
     }
+    conn.release();
   });
 });
 
@@ -250,7 +252,11 @@ app.get("/getProducts", function (req, res) {
             var file = item.ImageName;
             var filetype = file.split(".").pop();
             console.log(file);
-            var filelocation = path.join(__dirname + "/../src/uploads", file);
+            var filelocation = path.join(
+              __dirname + "/../public/uploads",
+              file
+            );
+            // console.log("TESTTT: " + filelocation);
             var img = fs.readFileSync(filelocation);
             var base64img = new Buffer(img).toString("base64");
             item.ItemImage = "data:image/" + filetype + ";base64," + base64img;
@@ -259,6 +265,7 @@ app.get("/getProducts", function (req, res) {
         }
       });
     }
+    conn.release();
   });
 });
 
@@ -294,7 +301,11 @@ app.get("/productDetails", function (req, res) {
             var file = item.ImageName;
             var filetype = file.split(".").pop();
             console.log(file);
-            var filelocation = path.join(__dirname + "/../src/uploads", file);
+            var filelocation = path.join(
+              __dirname + "/../public/uploads",
+              file
+            );
+            // console.log("TESTTT: " + filelocation);
             var img = fs.readFileSync(filelocation);
             var base64img = new Buffer(img).toString("base64");
             item.ItemImage = "data:image/" + filetype + ";base64," + base64img;
@@ -306,6 +317,7 @@ app.get("/productDetails", function (req, res) {
         }
       });
     }
+    conn.release();
   });
 });
 
@@ -334,10 +346,14 @@ app.get("/profile", function (req, res) {
           // res.writeHead(200, {
           //   "Content-type": "text/plain",
           // });
+          // console.log(
+          //   "USER DETAILS: " + JSON.stringify(result[0].ProfileImage)
+          // );
           res.end(JSON.stringify(result));
         }
       });
     }
+    conn.release();
   });
 });
 
@@ -398,6 +414,7 @@ app.post("/profile", function (req, res) {
         }
       });
     }
+    conn.release();
   });
 });
 
@@ -421,13 +438,12 @@ app.post("/purchase", function (req, res) {
       var datetime = new Date();
       // var ProfileId = 2;
       for (var i = 0; i < req.body[0].length; i++) {
-        var image = req.body[0][i].ItemName + ".jpg";
         records.push([
           req.body[0][0].ProfileId,
           OrderId,
           req.body[0][i].ItemId,
           req.body[0][i].ItemName,
-          image,
+          req.body[0][i].ImageName,
           req.body[0][i].ShopId,
           req.body[0][i].quantity,
           req.body[0][i].Price,
@@ -452,6 +468,7 @@ app.post("/purchase", function (req, res) {
         }
       });
     }
+    conn.release();
   });
 });
 
@@ -484,7 +501,11 @@ app.post("/history", function (req, res) {
             var file = item.ImageName;
             var filetype = file.split(".").pop();
             console.log(file);
-            var filelocation = path.join(__dirname + "/../src/uploads", file);
+            var filelocation = path.join(
+              __dirname + "/../public/uploads",
+              file
+            );
+            // console.log("TESTTT: " + filelocation);
             var img = fs.readFileSync(filelocation);
             var base64img = new Buffer(img).toString("base64");
             item.ItemImage = "data:image/" + filetype + ";base64," + base64img;
@@ -493,6 +514,7 @@ app.post("/history", function (req, res) {
         }
       });
     }
+    conn.release();
   });
 });
 
@@ -526,7 +548,7 @@ app.get("/favourites", function (req, res) {
           //   var file = item.ImageName;
           //   var filetype = file.split(".").pop();
           //   console.log(file);
-          //   var filelocation = path.join(__dirname + "/../src/uploads", file);
+          //   var filelocation = path.join(__dirname + "/../public/uploads", file);
           //   var img = fs.readFileSync(filelocation);
           //   var base64img = new Buffer(img).toString("base64");
           //   item.ItemImage = "data:image/" + filetype + ";base64," + base64img;
@@ -536,6 +558,7 @@ app.get("/favourites", function (req, res) {
         }
       });
     }
+    conn.release();
   });
 });
 
@@ -599,7 +622,7 @@ app.post("/set-remove-favourite", function (req, res) {
           //   var file = item.ImageName;
           //   var filetype = file.split(".").pop();
           //   console.log(file);
-          //   var filelocation = path.join(__dirname + "/../src/uploads", file);
+          //   var filelocation = path.join(__dirname + "/../public/uploads", file);
           //   var img = fs.readFileSync(filelocation);
           //   var base64img = new Buffer(img).toString("base64");
           //   item.ItemImage = "data:image/" + filetype + ";base64," + base64img;
@@ -608,6 +631,7 @@ app.post("/set-remove-favourite", function (req, res) {
         }
       });
     }
+    conn.release();
   });
 });
 
@@ -640,7 +664,11 @@ app.get("/favouritesImages", function (req, res) {
             var file = item.ImageName;
             var filetype = file.split(".").pop();
             console.log(file);
-            var filelocation = path.join(__dirname + "/../src/uploads", file);
+            var filelocation = path.join(
+              __dirname + "/../public/uploads",
+              file
+            );
+            // console.log("TESTTT: " + filelocation);
             var img = fs.readFileSync(filelocation);
             var base64img = new Buffer(img).toString("base64");
             item.ItemImage = "data:image/" + filetype + ";base64," + base64img;
@@ -649,14 +677,16 @@ app.get("/favouritesImages", function (req, res) {
         }
       });
     }
+    conn.release();
   });
 });
 
 const storage = multer.diskStorage({
-  destination: "./public/uploads/",
+  destination: "./public/uploads",
   filename: function (req, file, cb) {
     cb(null, file.originalname);
   },
+
   // filename: function (req, file, cb) {
   //   if (
   //     file.mimetype !== "image/png" &&
@@ -700,17 +730,18 @@ function checkFileType(file, cb) {
 
 //uploading photo
 app.post("/upload-photo", upload.single("photos"), (req, res) => {
-  console.log("Request Body from upload DP: ", req.body);
+  console.log("Request Body from upload DP: ", JSON.stringify(req.body));
   res.end(res.req.file.filename);
 });
 
 app.get("/download-photo/", (req, res) => {
-  console.log("Inside Download File" + req.query.file);
+  console.log("Inside Download File: " + req.query.file);
   var file = req.query.file;
 
   var filetype = file.split(".").pop();
 
   var filelocation = path.join(__dirname + "/../public/uploads", file);
+  // console.log("TESTTT: " + filelocation);
   var img = fs.readFileSync(filelocation);
   var base64img = new Buffer(img).toString("base64");
   res.writeHead(200, {
@@ -718,4 +749,616 @@ app.get("/download-photo/", (req, res) => {
   });
   // console.log(base64img);
   res.end("data:image/" + filetype + ";base64," + base64img);
+});
+
+app.post("/cart", function (req, res) {
+  console.log("Inside cart POST");
+  console.log("Request Body: " + JSON.stringify(req.body));
+  connection.getConnection(function (err, conn) {
+    if (err) {
+      console.log("Error in creating connection!");
+      // res.writeHead(400, {
+      //   "Content-type": "text/plain",
+      // });
+      res.end("Error in creating connection!");
+    } else {
+      //Login validation query
+      var sql = "SELECT * from favourites WHERE ProfileId = '" + Id + "';";
+      conn.query(sql, function (err, result) {
+        if (err) {
+          // res.writeHead(400, {
+          //   "Content-Type": "text/plain",
+          // });
+          res.end("ERROR");
+          console.log("Error: " + err);
+        } else {
+          // res.writeHead(200, {
+          //   "Content-type": "text/plain",
+          // });
+          for (const [key, item] of Object.entries(result)) {
+            var file = item.ImageName;
+            var filetype = file.split(".").pop();
+            console.log(file);
+            var filelocation = path.join(
+              __dirname + "/../public/uploads",
+              file
+            );
+            // console.log("TESTTT: " + filelocation);
+            var img = fs.readFileSync(filelocation);
+            var base64img = new Buffer(img).toString("base64");
+            item.ItemImage = "data:image/" + filetype + ";base64," + base64img;
+          }
+          res.send(result);
+        }
+      });
+    }
+    conn.release();
+  });
+});
+
+app.get("/check-shop-exists", function (req, res) {
+  console.log("Inside check shop exists GET");
+  //   console.log("Request Body ItemId: " + req.query.ItemId);
+  let ProfileId = req.query.ProfileId;
+  connection.getConnection(function (err, conn) {
+    if (err) {
+      console.log("Error in creating connection!");
+      res.writeHead(400, {
+        "Content-type": "text/plain",
+      });
+      res.end("Error in creating connection!");
+    } else {
+      //Login validation query
+
+      var sql =
+        "SELECT ShopName from shopdetails WHERE ProfileId = " +
+        mysql.escape(ProfileId) +
+        ";";
+
+      // console.log(sql);
+      conn.query(sql, function (err, result) {
+        if (err) {
+          console.log("Error while  check shop exists data");
+          res.writeHead(400, {
+            "Content-type": "text/plain",
+          });
+          res.end("Error while check shop exists data");
+        } else {
+          res.writeHead(200, {
+            "Content-type": "application/json",
+          });
+
+          if (result.length === 0) {
+            res.end("Not Found");
+          } else {
+            res.end(result[0].ShopName);
+          }
+        }
+      });
+    }
+    conn.release();
+  });
+});
+
+app.post("/add-shop-name", function (req, res) {
+  console.log("Inside add shop name  post");
+  //   console.log("Request Body ItemId: " + req.query.ItemId);
+  const { ProfileId, nameToAdd } = req.body;
+  console.log(ProfileId);
+  connection.getConnection(function (err, conn) {
+    if (err) {
+      console.log("Error in creating connection!");
+      res.writeHead(400, {
+        "Content-type": "text/plain",
+      });
+      res.end("Error in creating connection!");
+    } else {
+      var sql =
+        "INSERT INTO shopdetails (ShopName, ProfileId) VALUES(" +
+        mysql.escape(nameToAdd) +
+        "," +
+        mysql.escape(ProfileId) +
+        ");";
+
+      console.log(sql);
+      conn.query(sql, function (err, result) {
+        if (err) {
+          console.log("Error in add shop data");
+          res.writeHead(400, {
+            "Content-type": "text/plain",
+          });
+          res.end("Error in add shop data");
+        } else {
+          // console.log(result[0].password);
+          console.log("Profile Data: ", result);
+          res.writeHead(200, {
+            "Content-type": "application/json",
+          });
+          res.end("Added Shop Name");
+        }
+      });
+    }
+    conn.release();
+  });
+});
+
+app.get("/check-shop-name", function (req, res) {
+  console.log("Inside check shop name GET");
+  //   console.log("Request Body ItemId: " + req.query.ItemId);
+  const { ProfileId, nameToCheck } = req.query;
+
+  connection.getConnection(function (err, conn) {
+    if (err) {
+      console.log("Error in creating connection!");
+      res.writeHead(400, {
+        "Content-type": "text/plain",
+      });
+      res.end("Error in creating connection!");
+    } else {
+      //Login validation query
+
+      var sql =
+        "SELECT EXISTS(SELECT * from shopdetails WHERE ShopName=" +
+        mysql.escape(nameToCheck) +
+        ");";
+
+      // console.log(sql);
+      conn.query(sql, function (err, result) {
+        if (err) {
+          console.log("Error while retrieving name your shop data");
+          res.writeHead(400, {
+            "Content-type": "text/plain",
+          });
+          res.end("Error while retrieving name your shop data");
+        } else {
+          // console.log(result[0].password);
+          //   console.log("Items Data: ", result);
+          res.writeHead(200, {
+            "Content-type": "application/json",
+          });
+          //   console.log(result[0]["EXISTS(SELECT * from shopdetails WHERE ShopName='First Etsy Shop')"]);
+          var key = Object.keys(result[0])[0];
+          // console.log(key );
+          console.log(result[0][key]);
+          if (result[0][key] === 1) {
+            console.log(result[0][key]);
+            res.end("false");
+          } else {
+            res.end("true");
+          }
+        }
+      });
+    }
+    conn.release();
+  });
+});
+
+app.get("/shop/details", function (req, res) {
+  console.log("Inside get shop details GET");
+
+  const { ShopName } = req.query;
+  connection.getConnection(function (err, conn) {
+    if (err) {
+      console.log("Error in creating connection!");
+      res.writeHead(400, {
+        "Content-type": "text/plain",
+      });
+      res.end("Error in creating connection!");
+    } else {
+      //Login validation query
+
+      var sql =
+        "SELECT * from shopdetails WHERE ShopName = " +
+        mysql.escape(ShopName) +
+        ";";
+
+      // console.log(sql);
+      conn.query(sql, function (err, result) {
+        if (err) {
+          console.log("Error while  get shop details data");
+          res.writeHead(400, {
+            "Content-type": "text/plain",
+          });
+          res.end("Error while get shop details data");
+        } else {
+          res.writeHead(200, {
+            "Content-type": "application/json",
+          });
+          if (result[0].ShopImage) {
+            for (const [key, user] of Object.entries(result)) {
+              var file = user.ShopImage;
+              var filetype = file.split(".").pop();
+              // console.log(file);
+              var filelocation = path.join(
+                __dirname + "/../public/uploads",
+                file
+              );
+              // console.log("TESTTT: " + filelocation);
+              var img = fs.readFileSync(filelocation);
+              var base64img = new Buffer(img).toString("base64");
+              user.ShopImage =
+                "data:image/" + filetype + ";base64," + base64img;
+            }
+          }
+          res.end(JSON.stringify(result[0]));
+        }
+      });
+    }
+    conn.release();
+  });
+});
+
+app.get("/shop/items", function (req, res) {
+  console.log("Inside get shop items GET");
+
+  const { ShopId } = req.query;
+
+  connection.getConnection(function (err, conn) {
+    if (err) {
+      console.log("Error in creating connection!");
+      res.writeHead(400, {
+        "Content-type": "text/plain",
+      });
+      res.end("Error in creating connection!");
+    } else {
+      //Login validation query
+
+      var sql =
+        "SELECT * from products WHERE ShopId = " + mysql.escape(ShopId) + ";";
+
+      // console.log(sql);
+      conn.query(sql, function (err, result) {
+        if (err) {
+          console.log("Error while  get shop items data");
+          res.writeHead(400, {
+            "Content-type": "text/plain",
+          });
+          res.end("Error while get shop items data");
+        } else {
+          res.writeHead(200, {
+            "Content-type": "application/json",
+          });
+
+          for (const [key, user] of Object.entries(result)) {
+            if (user.ImageName) {
+              var file = user.ImageName;
+              var filetype = file.split(".").pop();
+              // console.log(file);
+              var filelocation = path.join(
+                __dirname + "/../public/uploads",
+                file
+              );
+              // console.log("TESTTT: " + filelocation);
+              var img = fs.readFileSync(filelocation);
+              var base64img = new Buffer(img).toString("base64");
+              user.ItemImage =
+                "data:image/" + filetype + ";base64," + base64img;
+            }
+          }
+          console.log("IMAGE NAME: " + JSON.stringify(result));
+          res.end(JSON.stringify(result));
+        }
+      });
+    }
+    conn.release();
+  });
+});
+
+app.get("/shop/check-owner", function (req, res) {
+  console.log("Inside get shop items GET");
+
+  const { ShopId, ProfileId } = req.query;
+  // console.log(token);
+
+  connection.getConnection(function (err, conn) {
+    if (err) {
+      console.log("Error in creating connection!");
+      res.writeHead(400, {
+        "Content-type": "text/plain",
+      });
+      res.end("Error in creating connection!");
+    } else {
+      //Login validation query
+
+      var sql =
+        "SELECT ProfileId from shopdetails WHERE ShopId = " +
+        mysql.escape(ShopId) +
+        ";";
+
+      // console.log(sql);
+      conn.query(sql, function (err, result) {
+        if (err) {
+          console.log("Error while check if owner ");
+          res.writeHead(400, {
+            "Content-type": "text/plain",
+          });
+          res.end("Error while check if owner ");
+        } else {
+          res.writeHead(200, {
+            "Content-type": "application/json",
+          });
+
+          let OwnerId = result[0].ProfileId;
+
+          if (OwnerId == ProfileId) {
+            res.end("true");
+          } else {
+            res.end("false");
+          }
+        }
+      });
+    }
+    conn.release();
+  });
+});
+
+app.post("/shop/upload-photo", upload.single("photos"), (req, res) => {
+  console.log("req.body", req.body);
+  res.end(res.req.file.filename);
+});
+
+app.get("/check-shop-name", function (req, res) {
+  console.log("Inside check shop name  GET");
+  //   console.log("Request Body ItemId: " + req.query.ItemId);
+  const { ProfileId, nameToCheck } = req.query;
+
+  connection.getConnection(function (err, conn) {
+    if (err) {
+      console.log("Error in creating connection!");
+      res.writeHead(400, {
+        "Content-type": "text/plain",
+      });
+      res.end("Error in creating connection!");
+    } else {
+      //Login validation query
+
+      var sql =
+        "SELECT EXISTS(SELECT * from shopdetails WHERE ShopName=" +
+        mysql.escape(nameToCheck) +
+        ");";
+
+      // console.log(sql);
+      conn.query(sql, function (err, result) {
+        if (err) {
+          console.log("Error while retrieving name your shop data");
+          res.writeHead(400, {
+            "Content-type": "text/plain",
+          });
+          res.end("Error while retrieving name your shop data");
+        } else {
+          // console.log(result[0].password);
+          //   console.log("Items Data: ", result);
+          res.writeHead(200, {
+            "Content-type": "application/json",
+          });
+          //   console.log(result[0]["EXISTS(SELECT * from shopdetails WHERE ShopName='First Etsy Shop')"]);
+          var key = Object.keys(result[0])[0];
+          // console.log(key );
+          console.log(result[0][key]);
+          if (result[0][key] === 1) {
+            console.log(result[0][key]);
+            res.end("false");
+          } else {
+            res.end("true");
+          }
+        }
+      });
+    }
+    conn.release();
+  });
+});
+
+app.post("/shop/add-photo", function (req, res) {
+  console.log("Inside add shop photo  post");
+  //   console.log("Request Body ItemId: " + req.query.ItemId);
+  const { ShopImage, ShopId } = req.body;
+
+  connection.getConnection(function (err, conn) {
+    if (err) {
+      console.log("Error in creating connection!");
+      res.writeHead(400, {
+        "Content-type": "text/plain",
+      });
+      res.end("Error in creating connection!");
+    } else {
+      var sql =
+        "UPDATE shopdetails SET ShopImage = " +
+        mysql.escape(ShopImage) +
+        " WHERE ShopId = " +
+        mysql.escape(ShopId) +
+        ";";
+
+      // console.log(sql);
+      conn.query(sql, function (err, result) {
+        if (err) {
+          console.log("Error in add shop photo");
+          res.writeHead(400, {
+            "Content-type": "text/plain",
+          });
+          res.end("Error in add shop photo");
+        } else {
+          // console.log(result[0].password);
+          // console.log("Profile Data: ", result);
+          res.writeHead(200, {
+            "Content-type": "application/json",
+          });
+          var file = ShopImage;
+          var filetype = file.split(".").pop();
+          // console.log(file);
+          var filelocation = path.join(__dirname + "/../public/uploads", file);
+          // console.log("TESTTT: " + filelocation);
+          var img = fs.readFileSync(filelocation);
+          var base64img = new Buffer(img).toString("base64");
+          ShopImageEncoded = "data:image/" + filetype + ";base64," + base64img;
+          console.log(ShopImageEncoded);
+          res.end(ShopImageEncoded);
+        }
+      });
+    }
+    conn.release();
+  });
+});
+
+app.post("/item/upload-photo", upload.single("photos"), (req, res) => {
+  console.log("req.body", req.body);
+  res.end(res.req.file.filename);
+});
+
+app.post("/item/add", function (req, res) {
+  console.log("Inside ITEM ADD POST");
+  console.log("Request Body: " + JSON.stringify(req.body.Description));
+  connection.getConnection(function (err, conn) {
+    if (err) {
+      console.log("Error in creating connection!");
+      res.writeHead(400, {
+        "Content-type": "text/plain",
+      });
+      res.end("Error in creating connection!");
+    } else {
+      const zero = 0;
+      // var file = req.body.ItemImage;
+      // var filetype = file.split(".").pop();
+      // // console.log(file);
+      // var filelocation = path.join(__dirname + "/../public/uploads", file);
+      // console.log("TESTTT: " + filelocation);
+      // var img = fs.readFileSync(filelocation);
+      // var base64img = new Buffer(img).toString("base64");
+      // ShopImageEncoded = "data:image/" + filetype + ";base64," + base64img;
+      var sql =
+        "INSERT INTO products (ItemName, ShopId, Category, ImageName, Price, QuantityAvailable, QuantitySold, Description) VALUES ('" +
+        req.body.ItemName +
+        "'," +
+        parseInt(req.body.ShopId) +
+        ",'" +
+        req.body.Category +
+        "','" +
+        req.body.ItemImage +
+        "'," +
+        parseFloat(req.body.Price) +
+        "," +
+        parseInt(req.body.QuantityAvailable) +
+        "," +
+        parseInt(zero) +
+        ",'" +
+        req.body.Description +
+        "');";
+      conn.query(sql, function (err, result) {
+        if (err) {
+          console.log("Error in adding item");
+          console.log("ERROR: " + err);
+          console.log("SQL:" + sql);
+          res.writeHead(400, {
+            "Content-type": "text/plain",
+          });
+          res.end("Error in adding item");
+        } else {
+          // console.log(result[0].password);
+          // console.log("Profile Data: ", result);
+          res.writeHead(200, {
+            "Content-type": "application/json",
+          });
+          res.end(result[0]);
+        }
+      });
+    }
+    conn.release();
+  });
+});
+
+app.post("/item/edit", function (req, res) {
+  console.log("Inside ITEM EDIT POST");
+  console.log("Request Body: " + JSON.stringify(req.body.Description));
+  connection.getConnection(function (err, conn) {
+    if (err) {
+      console.log("Error in creating connection!");
+      res.writeHead(400, {
+        "Content-type": "text/plain",
+      });
+      res.end("Error in creating connection!");
+    } else {
+      const zero = 0;
+      var sql =
+        "UPDATE products SET ItemName = '" +
+        req.body.ItemName +
+        "',ShopId = " +
+        parseInt(req.body.ShopId) +
+        ", Category = '" +
+        req.body.Category +
+        "', ImageName = '" +
+        req.body.ItemImage +
+        "', Price = " +
+        parseFloat(req.body.Price) +
+        ", QuantityAvailable = " +
+        parseInt(req.body.QuantityAvailable) +
+        ", Description = '" +
+        req.body.Description +
+        "' WHERE ItemId = " +
+        req.body.ItemId +
+        ";";
+      conn.query(sql, function (err, result) {
+        if (err) {
+          console.log("Error in editing item");
+          console.log("ERROR: " + err);
+          console.log("SQL:" + sql);
+          res.writeHead(400, {
+            "Content-type": "text/plain",
+          });
+          res.end("Error in adding item");
+        } else {
+          // console.log(result[0].password);
+          // console.log("Profile Data: ", result);
+          res.writeHead(200, {
+            "Content-type": "application/json",
+          });
+          res.end(result[0]);
+        }
+      });
+    }
+    conn.release();
+  });
+});
+
+app.post("/updatequantity", function (req, res) {
+  console.log("INSIDE CART POST");
+  console.log("Request Body: " + JSON.stringify(req.body));
+  connection.getConnection(function (err, conn) {
+    if (err) {
+      console.log("Error in creating connection!");
+      res.writeHead(400, {
+        "Content-type": "text/plain",
+      });
+      res.end("Error in creating connection!");
+    } else {
+      var sql = "";
+      for (var i = 0; i < req.body[0].length; i++) {
+        sql +=
+          "UPDATE products SET QuantitySold = QuantitySold + " +
+          parseInt(req.body[0][i].quantity) +
+          ", QuantityAvailable = QuantityAvailable - " +
+          parseInt(req.body[0][i].quantity) +
+          " WHERE ItemId = " +
+          parseInt(req.body[0][i].ItemId) +
+          ";";
+      }
+      conn.query(sql, function (err, result) {
+        if (err) {
+          console.log("Error in editing item");
+          console.log("ERROR: " + err);
+          console.log("SQL:" + sql);
+          // res.writeHead(400, {
+          //   "Content-type": "text/plain",
+          // });
+          res.end("Error in updating quantity item");
+        } else {
+          // console.log(result[0].password);
+          // console.log("Profile Data: ", result);
+          // res.writeHead(200, {
+          //   "Content-type": "application/json",
+          // });
+          res.send(result);
+        }
+      });
+    }
+    conn.release();
+  });
 });
