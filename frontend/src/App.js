@@ -1,20 +1,19 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 // import './App.css';
-import Main from './Components/Main';
+import Main from "./Components/Main";
 
-import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 class App extends Component {
   render() {
     return (
-        <div>
-          <Main />
-        </div>
+      <div>
+        <Main />
+      </div>
     );
   }
 }
 
 export default App;
-
 
 // import Signup from './componenets/Signup/Signup';
 // import {BrowserRouter, Route, Routes} from 'react-router-dom';

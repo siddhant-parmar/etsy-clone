@@ -11,7 +11,6 @@ import Cart from "./Cart/Cart";
 import Favourite from "./Favourite/Favourite";
 import Product from "./Home/Product";
 import History from "./OrderHistory/History";
-import { Nav } from "react-bootstrap";
 import ShopName from "./Shop/ShopName";
 import ShopPage from "./Shop/ShopPage";
 
