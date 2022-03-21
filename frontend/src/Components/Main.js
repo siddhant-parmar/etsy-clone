@@ -13,6 +13,7 @@ import Product from "./Home/Product";
 import History from "./OrderHistory/History";
 import ShopName from "./Shop/ShopName";
 import ShopPage from "./Shop/ShopPage";
+import SearchPage from "./Search/SearchPage";
 
 class Main extends Component {
   render() {
@@ -32,6 +33,7 @@ class Main extends Component {
             <Route path="/orderhistory" element={<History />} />
             <Route path="/name-your-shop" element={<ShopName />} />
             <Route path="/your-shop" element={<ShopPage />} />
+            <Route path="/search-page" element={<SearchPage />} />
           </Routes>
         </BrowserRouter>
       </div>
