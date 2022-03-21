@@ -60,7 +60,7 @@ app.use(cors({ origin: dbdata.frontEnd, credentials: true }));
 // });
 
 app.use(function (req, res, next) {
-  res.setHeader("Access-Control-Allow-Origin", "http://54.151.52.123:3000");
+  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
   res.setHeader("Access-Control-Allow-Credentials", "true");
   res.setHeader(
     "Access-Control-Allow-Methods",
