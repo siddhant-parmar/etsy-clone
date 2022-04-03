@@ -6,6 +6,10 @@ import EditIcon from "@mui/icons-material/Edit";
 import NavBar from "../NavBar/NavBar";
 import Footer from "../Footer/Footer";
 import { useNavigate } from "react-router-dom";
+import EuroIcon from "@mui/icons-material/Euro";
+import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+
 import {
   Box,
   Grid,
@@ -15,12 +19,21 @@ import {
 } from "@mui/material";
 import { Button } from "react-bootstrap";
 import cookie from "react-cookies";
-import {API} from "../../backend";
+import { API } from "../../backend";
 
 const Favourite = () => {
+  const [currencyvalue, setcurrencyValue] = useState("USD");
+  let currencySymbol = null;
+  if (currencyvalue === "USD") {
+    currencySymbol = <MonetizationOnIcon />;
+  } else if (currencyvalue === "Euro") {
+    currencySymbol = <EuroIcon />;
+  } else if (currencyvalue === "INR") {
+    currencySymbol = <CurrencyRupeeIcon />;
+  }
+
   const navigate = useNavigate();
   const [userData, setUserData] = useState({});
-  const [currencyvalue, setcurrencyValue] = useState("USD");
   const [favouritesList, setFavouritesList] = useState([]);
   const [shopData, setShopData] = useState({});
   const [profilePhoto, setProfilePhoto] = useState(
@@ -31,7 +44,7 @@ const Favourite = () => {
     const ProfileId = cookie.load("cookie");
     // console.log(ProfileId);
     const fetchUserData = async () => {
-      let responseData = await axios.get( API + "/profile", {
+      let responseData = await axios.get(API + "/profile", {
         params: {
           ProfileId: ProfileId,
         },
@@ -40,20 +53,17 @@ const Favourite = () => {
       setUserData(responseData.data[0]);
     };
     const fetchFavourites = async () => {
-      let responseData = await axios.get(
-         API + "/favouritesImages",
-        {
-          params: {
-            Id: ProfileId,
-          },
-        }
-      );
+      let responseData = await axios.get(API + "/favouritesImages", {
+        params: {
+          Id: ProfileId,
+        },
+      });
       // console.log("SIDDDDDDD: " + responseData.data);
       setFavouritesList(responseData.data);
     };
-    
+
     axios
-      .get( API + "/download-photo/", {
+      .get(API + "/download-photo/", {
         params: {
           file: userData.ProfileImage,
         },
@@ -105,7 +115,7 @@ const Favourite = () => {
       <>
         <ImageList cols={4}>
           {favouritesList.map((item) => (
-            <ImageListItem key={item.ItemId}>
+            <ImageListItem sx={{ padding: "10px" }} key={item.ItemId}>
               <img
                 id="item-image"
                 src={item.ItemImage}
@@ -116,7 +126,20 @@ const Favourite = () => {
                 onClick={displayProduct}
                 loading="lazy"
               />
-              <ImageListItemBar title={item.ItemName} />
+              <ImageListItemBar
+                sx={{ backgroundColor: "transparent" }}
+                title={
+                  <Button
+                    style={{
+                      backgroundColor: "black",
+                      borderColor: "black",
+                      borderRadius: "40px",
+                    }}
+                  >
+                    {currencySymbol} {item.Price}
+                  </Button>
+                }
+              />
             </ImageListItem>
           ))}
         </ImageList>

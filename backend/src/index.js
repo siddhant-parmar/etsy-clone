@@ -60,7 +60,7 @@ app.use(cors({ origin: dbdata.frontEnd, credentials: true }));
 // });
 
 app.use(function (req, res, next) {
-  res.setHeader("Access-Control-Allow-Origin", "http://54.177.169.246:3000");
+  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
   res.setHeader("Access-Control-Allow-Credentials", "true");
   res.setHeader(
     "Access-Control-Allow-Methods",
@@ -934,9 +934,10 @@ app.get("/check-shop-name", function (req, res) {
 });
 
 app.get("/shop/details", function (req, res) {
-  console.log("Inside get shop details GET");
+  console.log("Inside shop details GET");
+  console.log("Request query: " + JSON.stringify(req.query));
 
-  const { ShopName } = req.query;
+  const { ProfileId } = req.query;
   connection.getConnection(function (err, conn) {
     if (err) {
       console.log("Error in creating connection!");
@@ -945,11 +946,9 @@ app.get("/shop/details", function (req, res) {
       });
       res.end("Error in creating connection!");
     } else {
-      //Login validation query
-
       var sql =
-        "SELECT * from shopdetails WHERE ShopName = " +
-        mysql.escape(ShopName) +
+        "SELECT * from shopdetails WHERE ProfileId = " +
+        mysql.escape(ProfileId) +
         ";";
 
       // console.log(sql);
@@ -964,7 +963,7 @@ app.get("/shop/details", function (req, res) {
           res.writeHead(200, {
             "Content-type": "application/json",
           });
-          if (result[0].ShopImage) {
+          if (result[0].ShopImage != undefined) {
             for (const [key, user] of Object.entries(result)) {
               var file = user.ShopImage;
               var filetype = file.split(".").pop();

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Card } from "react-bootstrap";
+import { Button, Card } from "react-bootstrap";
 import axios from "axios";
 import cookie from "react-cookies";
 import "./home.css";
@@ -11,12 +11,9 @@ import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import ImageListItemBar from "@mui/material/ImageListItemBar";
-import IconButton from "@mui/material/IconButton";
-import HeartIcon from "@mui/icons-material/Favorite";
 import { useNavigate } from "react-router-dom";
 import Favourite from "../Pages/Favourite";
 import { API } from "../../backend";
-
 
 function Home() {
   const [currencyvalue, setcurrencyValue] = useState("USD");
@@ -41,7 +38,11 @@ function Home() {
 
       <Card.Body>
         <Card.Text style={{ fontSize: "50px", fontFamily: "Times New Roman" }}>
-          Welcome back, <a href="/profile">{userName}</a>!
+          Welcome back,{" "}
+          <a style={{ color: "black" }} href="/profile">
+            {userName}
+          </a>
+          !
         </Card.Text>
       </Card.Body>
     );
@@ -79,13 +80,13 @@ function Home() {
   const navigate = useNavigate();
 
   const fetchItemImages = () => {
-    axios.get( API + "/getProducts").then((response) => {
+    axios.get(API + "/getProducts").then((response) => {
       setItemData(response.data);
       // itemData = JSON.parse(itemData);
     });
   };
   const fetchUserDetails = async () => {
-    await axios.get( API + "/home").then((response) => {
+    await axios.get(API + "/home").then((response) => {
       var stringify = JSON.stringify(response.data.user_details[0].Name);
       // console.log(
       // "JADBFNJI: " + JSON.stringify(response.data.user_details[0].Name)
@@ -121,31 +122,33 @@ function Home() {
         {/* {currencySymbol}
         {currencyvalue} */}
 
-        <ImageList sx={{ width: "100%", height: 1500 }}>
-          <ImageListItem key="Subheader" cols={4}></ImageListItem>
+        <ImageList
+          cols={4}
+          sx={{ padding: "10px", width: "100%", height: 1500 }}
+        >
           {itemData.map((item) => (
-            <ImageListItem
-              key={item.ItemImage}
-              style={{ padding: 10, width: "100%" }}
-            >
+            <ImageListItem sx={{ padding: "10px" }} key={item.ItemId}>
               <img
                 src={item.ItemImage}
-                srcSet={item.ItemImage}
-                alt={item.ItemName}
                 name={item.ItemId}
-                loading="lazy"
+                alt={item.ItemName}
                 onClick={displayProduct}
               />
               <ImageListItemBar
-                title={item.ItemName}
-                subtitle={item.Price}
-                position="below"
-                actionIcon={
-                  <IconButton sx={{ color: "#ff0000" }}>
-                    <Favourite data={item}></Favourite>
-                  </IconButton>
+                sx={{ backgroundColor: "transparent" }}
+                title={
+                  <Button
+                    style={{
+                      backgroundColor: "black",
+                      borderColor: "black",
+                      borderRadius: "40px",
+                    }}
+                  >
+                    {currencySymbol} {item.Price}
+                  </Button>
                 }
-              ></ImageListItemBar>
+                actionIcon={<Favourite data={item}></Favourite>}
+              />
             </ImageListItem>
           ))}
         </ImageList>

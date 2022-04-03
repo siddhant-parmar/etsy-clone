@@ -39,9 +39,10 @@ function ShopPage() {
   useEffect(() => {
     let isSubscribed = true;
     const fetchAllShopData = async () => {
+      console.log("COnsole Log from ShopPage.js: " + JSON.stringify(state));
       let responseShop = await axios.get(API + "/shop/details", {
         params: {
-          ShopName: state,
+          ProfileId: ProfileId,
         },
       });
       await setShopData(responseShop.data);
@@ -108,7 +109,9 @@ function ShopPage() {
       ShopId: shopData.ShopId,
     };
     let responseImage = await axios.post(API + "/shop/add-photo", dataToPost);
-    shopData.ShopImage = responseImage.data;
+    if (responseImage.data != undefined) {
+      shopData.ShopImage = responseImage.data;
+    }
     // console.log(shopData.ShopImage);
     setShopData(shopData);
     window.location.reload(false);
@@ -121,7 +124,7 @@ function ShopPage() {
     };
   };
   const imageClickHandler = (event) => {
-    navigate("/item", {
+    navigate("/product", {
       state: event.target.name,
     });
   };
@@ -130,7 +133,7 @@ function ShopPage() {
     <>
       <ImageList cols={4}>
         {shopItems.map((item) => (
-          <ImageListItem key={item.ItemId}>
+          <ImageListItem sx={{ padding: "10px" }} key={item.ItemId}>
             <img
               src={item.ItemImage}
               name={item.ItemId}

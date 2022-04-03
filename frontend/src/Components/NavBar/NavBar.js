@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Component } from "react";
 import {
   Navbar,
   Container,
@@ -7,66 +7,30 @@ import {
   Form,
   FormControl,
   Dropdown,
+  NavLink,
 } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
 import LoginSignupButton from "../Pages/LoginSignupButton";
-import LogoutButton from "../Pages/LogoutSignoutButton";
-import StoreIcon from "@mui/icons-material/Store";
-import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
-import axios from "axios";
-import { API } from "../../backend";
+import LogoutSignoutButton from "../Pages/LogoutSignoutButton";
+import cookie from "react-cookies";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import SearchBar from "material-ui-search-bar";
 
 function NavBar() {
-  let navigate = useNavigate();
-  let LoginLogOutButton = null;
-  let Favourite = null;
-  let ShopButton = null;
-  let CartButton = null;
-
   const [searchEntry, setSearchEntry] = useState("");
+  const navigate = useNavigate();
+  let LoginOutButton = null;
+  let Favourite = null;
+  let StoreIcn = null;
 
-  const handleShopIconClick = async () => {
-    const local = JSON.parse(localStorage.getItem("user"));
-    const token = local.token;
-    axios
-      .get(API + "/profile/check-address", {
-        params: {
-          token: token,
-        },
-      })
-      .then((responseCheck) => {
-        if (responseCheck.data) {
-          axios
-            .get(API + "/shop/check-shop-exists", {
-              params: {
-                token: token,
-              },
-            })
-            .then((response) => {
-              if (response.data === "Not Found") {
-                navigate("/name-your-shop");
-              } else {
-                navigate("/your-shop", {
-                  state: response.data,
-                });
-              }
-            });
-          // console.log(response.data === "Not Found");
-        } else {
-          alert("You don't have any delivery address... Edit in your profile");
-        }
-      });
-  };
-  if (localStorage.getItem("user")) {
+  if (cookie.load("cookie")) {
+    // console.log("Able to read cookie");
     Favourite = (
       <div>
-        <Nav.Link
-          className="border-left pl-2 ms-auto"
-          onClick={() => navigate("/profile-page")}
-        >
+        <Nav.Link className="border-left pl-2 ms-auto" href="/favourite">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="20"
+            width="26"
             height="26"
             fill="currentColor"
             className="bi bi-heart"
@@ -77,19 +41,23 @@ function NavBar() {
         </Nav.Link>
       </div>
     );
-    ShopButton = (
+    StoreIcn = (
       <div>
-        <Nav.Link className="border-left pl-2 ms-auto">
-          <StoreIcon
-            fontSize="medium"
-            sx={{ width: "20", height: "26", color: "black" }}
-            onClick={handleShopIconClick}
-          />
-          &nbsp;&nbsp;
+        <Nav.Link className="border-left pl-2 ms-auto" href="/your-shop">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="26"
+            height="26"
+            fill="currentColor"
+            class="bi bi-shop-window"
+            viewBox="0 0 16 16"
+          >
+            <path d="M2.97 1.35A1 1 0 0 1 3.73 1h8.54a1 1 0 0 1 .76.35l2.609 3.044A1.5 1.5 0 0 1 16 5.37v.255a2.375 2.375 0 0 1-4.25 1.458A2.371 2.371 0 0 1 9.875 8 2.37 2.37 0 0 1 8 7.083 2.37 2.37 0 0 1 6.125 8a2.37 2.37 0 0 1-1.875-.917A2.375 2.375 0 0 1 0 5.625V5.37a1.5 1.5 0 0 1 .361-.976l2.61-3.045zm1.78 4.275a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 1 0 2.75 0V5.37a.5.5 0 0 0-.12-.325L12.27 2H3.73L1.12 5.045A.5.5 0 0 0 1 5.37v.255a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0zM1.5 8.5A.5.5 0 0 1 2 9v6h12V9a.5.5 0 0 1 1 0v6h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1V9a.5.5 0 0 1 .5-.5zm2 .5a.5.5 0 0 1 .5.5V13h8V9.5a.5.5 0 0 1 1 0V13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5a.5.5 0 0 1 .5-.5z" />
+          </svg>
         </Nav.Link>
       </div>
     );
-    LoginLogOutButton = (
+    LoginOutButton = (
       <Dropdown className="border-left pl-2 ms-auto">
         <Dropdown.Toggle variant="light" id="dropdown-basic">
           <svg
@@ -105,15 +73,11 @@ function NavBar() {
         </Dropdown.Toggle>
 
         <Dropdown.Menu>
-          <Dropdown.Item
-            onClick={(e) => {
-              navigate("/profile-page");
-            }}
-          >
+          <Dropdown.Item href="/profile">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
+              width="26"
+              height="26"
               fill="currentColor"
               className="bi bi-person-fill"
               viewBox="0 0 16 16"
@@ -123,32 +87,14 @@ function NavBar() {
             &nbsp;&nbsp;&nbsp;View Profile
           </Dropdown.Item>
           <Dropdown.Item href="/home">
-            <LogoutButton />
-          </Dropdown.Item>
-          <Dropdown.Item onClick={(e) => navigate("/purchase")}>
-            <ShoppingBagIcon /> &nbsp;Purchases
+            <LogoutSignoutButton />
           </Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
     );
-    CartButton = (
-      <Nav.Link>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="26"
-          height="26"
-          fill="currentColor"
-          className="bi bi-cart4"
-          viewBox="0 0 16 16"
-          onClick={(e) => navigate("/cart")}
-        >
-          <path d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5zM3.14 5l.5 2H5V5H3.14zM6 5v2h2V5H6zm3 0v2h2V5H9zm3 0v2h1.36l.5-2H12zm1.11 3H12v2h.61l.5-2zM11 8H9v2h2V8zM8 8H6v2h2V8zM5 8H3.89l.5 2H5V8zm0 5a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0zm9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0z" />
-        </svg>
-      </Nav.Link>
-    );
   } else {
-    // navigate("/home")
-    LoginLogOutButton = (
+    // console.log("Not able to read cookie");
+    LoginOutButton = (
       <Nav.Link className="border-left pl-2 ms-auto" href="">
         <LoginSignupButton />
       </Nav.Link>
@@ -162,18 +108,15 @@ function NavBar() {
       });
     }
   };
-  const handleSearchChange = (event) => {
-    setSearchEntry(event.target.value);
-  };
+  // const handleSearchChange = (event) => {
+  //   setSearchEntry(event.target.value);
+  // };
   return (
     <>
-      <div></div>
       <Navbar bg="light" expand="lg">
         <Container fluid>
-          <Navbar.Brand href="#">
-            <h2 style={{ color: "red" }} onClick={(e) => navigate("/home")}>
-              &nbsp;&nbsp;&nbsp; Etsy
-            </h2>
+          <Navbar.Brand href="/home">
+            <h1 style={{ color: "#f1641d" }}>&nbsp;&nbsp;&nbsp; Etsy</h1>
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="navbarScroll" />
           <Navbar.Collapse id="navbarScroll">
@@ -183,44 +126,97 @@ function NavBar() {
               navbarScroll
               //className="ml-auto"
             >
-              <Form className="d-flex ms-auto">
+              {/* <Form className="d-flex ms-auto">
                 <FormControl
                   type="search"
                   placeholder="Search"
                   className="form-control-lg me-2"
                   aria-label="Search"
-                  value={searchEntry}
                   onChange={handleSearchChange}
                 />
-                <Button
-                  variant="outline-primary"
-                  size="sm"
-                  onClick={handleSearchClick}
-                >
+                <Button variant="light" size="sm" onClick={handleSearchClick}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
+                    width="20"
+                    height="20"
                     fill="currentColor"
                     className="bi bi-search"
                     viewBox="0 0 16 16"
                   >
                     <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
                   </svg>
-                  {/* Search */}
                 </Button>
-              </Form>
-              {LoginLogOutButton}
-              {ShopButton}
+              </Form> */}
+              <SearchBar
+                placeholder="Search for anything"
+                className="d-flex ms-auto"
+                value={searchEntry}
+                onChange={(newValue) => setSearchEntry(newValue)}
+                onRequestSearch={handleSearchClick}
+              />
+              {LoginOutButton}
+              {StoreIcn}
+              &nbsp;&nbsp;&nbsp;
               {Favourite}
               &nbsp;&nbsp;&nbsp;
-              {CartButton}
+              <Nav.Link href="/cart">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="26"
+                  height="26"
+                  fill="currentColor"
+                  className="bi bi-cart4"
+                  viewBox="0 0 16 16"
+                >
+                  <path d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5zM3.14 5l.5 2H5V5H3.14zM6 5v2h2V5H6zm3 0v2h2V5H9zm3 0v2h1.36l.5-2H12zm1.11 3H12v2h.61l.5-2zM11 8H9v2h2V8zM8 8H6v2h2V8zM5 8H3.89l.5 2H5V8zm0 5a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0zm9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0z" />
+                </svg>
+              </Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Container>
       </Navbar>
+      <Navbar className="justify-content-center" bg="light" expand="lg">
+        <Nav style={{ fontSize: "12px" }}>
+          <Nav.Item>
+            <Nav.Link href="/home">Home Favorites</Nav.Link>
+          </Nav.Item>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <Nav.Item>
+            <Nav.Link href="/home">Jewelry & Accessories</Nav.Link>
+          </Nav.Item>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <Nav.Item>
+            <Nav.Link href="/home">Clothing & Shoes</Nav.Link>
+          </Nav.Item>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <Nav.Item>
+            <Nav.Link href="/home">Home & Living</Nav.Link>
+          </Nav.Item>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <Nav.Item>
+            <Nav.Link href="/home">Wedding & Party</Nav.Link>
+          </Nav.Item>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <Nav.Item>
+            <Nav.Link href="/home">Toys & Entertainment</Nav.Link>
+          </Nav.Item>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <Nav.Item>
+            <Nav.Link href="/home">Art & Collectibles</Nav.Link>
+          </Nav.Item>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <Nav.Item>
+            <Nav.Link href="/home">Craft Supplies</Nav.Link>
+          </Nav.Item>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <Nav.Item>
+            <Nav.Link href="/home">Gifts & Gift Cards</Nav.Link>
+          </Nav.Item>
+        </Nav>
+      </Navbar>
     </>
   );
 }
+
 // render(<Home />);
 export default NavBar;

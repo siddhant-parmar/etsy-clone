@@ -64,35 +64,38 @@ function SearchListComponent(props) {
       }
     } else if (filters.PriceFilter === "LessThan15") {
       return resultImages.filter((item) => item.Price <= 15);
-    }
-    else if (filters.PriceFilter === "15to50") {
+    } else if (filters.PriceFilter === "15to50") {
       return resultImages.filter((item) => item.Price > 15 && item.Price <= 50);
-    }
-    else if(filters.OutOfStockFlag){
+    } else if (filters.OutOfStockFlag) {
       return resultImages.filter((item) => item.QuantityAvailable !== 0);
-    }
-    else {
+    } else {
       return resultImages;
     }
-  }, [filters.Order, filters.OutOfStockFlag, filters.PriceFilter, filters.SortBy, resultImages]);
+  }, [
+    filters.Order,
+    filters.OutOfStockFlag,
+    filters.PriceFilter,
+    filters.SortBy,
+    resultImages,
+  ]);
 
   useEffect(() => {
     setcurrencyValue(reduxState.currency);
   }, [reduxState.currency]);
 
   const handleFilterChange = (event) => {
-    if(event.target.name === "OutOfStockFlag") {
+    if (event.target.name === "OutOfStockFlag") {
       setFilters({
         ...filters,
         [event.target.name]: event.target.checked,
       });
-    }else {
+    } else {
       setFilters({
         ...filters,
         [event.target.name]: event.target.value,
       });
     }
-    
+
     console.log(filters);
   };
 
@@ -145,10 +148,8 @@ function SearchListComponent(props) {
       </ImageList>
     </>
   );
-  if(filteredResult.length === 0) {
-    resultImagesView = (
-      <>No Items Left</>
-    )
+  if (filteredResult.length === 0) {
+    resultImagesView = <>No Items Left</>;
   }
   return (
     <div>
@@ -184,8 +185,8 @@ function SearchListComponent(props) {
             <MenuItem value="">
               <em>None</em>
             </MenuItem>
-            <MenuItem value="HighToLow">Low To High</MenuItem>
-            <MenuItem value="LowToHigh">High To Low</MenuItem>
+            <MenuItem value="HighToLow">High To Low</MenuItem>
+            <MenuItem value="LowToHigh">Low To High</MenuItem>
           </Select>
         </FormControl>
         <FormControl sx={{ m: 2, minWidth: 130 }}>
@@ -207,11 +208,15 @@ function SearchListComponent(props) {
         </FormControl>
         <FormGroup>
           <FormControlLabel
-            control={<Checkbox checked={filters.OutOfStockFlag} onChange={handleFilterChange} name="OutOfStockFlag" />}
+            control={
+              <Checkbox
+                checked={filters.OutOfStockFlag}
+                onChange={handleFilterChange}
+                name="OutOfStockFlag"
+              />
+            }
             label="Exclude Out of Stock Items"
-            
           />
-         
         </FormGroup>
       </div>
       <div className="p-2">{resultImagesView} </div>

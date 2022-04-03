@@ -7,6 +7,7 @@ import { useState } from "react";
 import Footer from "../Footer/Footer";
 import { useNavigate } from "react-router-dom";
 import { API } from "../../backend";
+import { Nav } from "react-bootstrap";
 export const Profile = () => {
   const navigate = useNavigate();
   const id = cookie.load("ProfileDetails");
@@ -28,7 +29,7 @@ export const Profile = () => {
   });
   useEffect(() => {
     axios
-      .get( API + "/profile", {
+      .get(API + "/profile", {
         params: {
           ProfileId: id.ProfileId,
         },
@@ -60,7 +61,7 @@ export const Profile = () => {
         }
 
         axios
-          .get( API + "/download-photo/", {
+          .get(API + "/download-photo/", {
             params: {
               file: data.ProfileImage,
             },
@@ -118,7 +119,7 @@ export const Profile = () => {
       var profilePhoto = event.target.files[0];
       var data = new FormData();
       data.append("photos", profilePhoto);
-      let responseData = axios.post( API + "/upload-photo", data);
+      let responseData = axios.post(API + "/upload-photo", data);
       setformValue({
         ...formValue,
         [event.target.name]: profilePhoto.name,
@@ -145,7 +146,7 @@ export const Profile = () => {
       ProfileImage: formValue.ProfileImage,
       Phonenumber: formValue.Phonenumber,
     };
-    axios.post( API + "/profile", data).then((response) => {
+    axios.post(API + "/profile", data).then((response) => {
       if (response.status === 200) {
         console.log("TESTING SUCCESS");
       }
@@ -174,275 +175,277 @@ export const Profile = () => {
     );
   }
   return (
-    <div>
-      <div className="content-container">
-        <NavBar />
-        {/* <Container fluid> */}
-        <div id="content" class="clear " role="main">
-          {/* <Row className="justify-content-md-center"> */}
-          {/* <Col xs lg="2"> */}
-          <div className="grid-child green">
-            <div id="content" className="clear " role="main">
-              <link
-                rel="stylesheet"
-                href="https://www.etsy.com/ac/primary/css/base.20220304135846.css"
-                type="text/css"
-              />
-              {/* <link
+    <>
+      <NavBar />
+      <div>
+        <div className="content-container">
+          {/* <Container fluid> */}
+          <div id="content" class="clear " role="main">
+            {/* <Row className="justify-content-md-center"> */}
+            {/* <Col xs lg="2"> */}
+            <div className="grid-child green">
+              <div id="content" className="clear " role="main">
+                <link
+                  rel="stylesheet"
+                  href="https://www.etsy.com/ac/primary/css/base.20220304135846.css"
+                  type="text/css"
+                />
+                {/* <link
                 rel="stylesheet"
                 href="https://www.etsy.com/dac/common/web-toolkit/scoped/scoped_fixed_shared.20220304135846,common/web-toolkit/v1_toolkit_with_v2_footer/fixed-global-nav.20220304135846,common/web-toolkit/a11y_colors/overrides.20220304135846.css"
                 type="text/css"
               /> */}
-              <link
-                rel="stylesheet"
-                href="https://www.etsy.com/dac/site-chrome/components/components.20220304135846,site-chrome/header/header.20220304135846,site-chrome/footer/footer.20220304135846,gdpr/settings-overlay.20220304135846.css"
-                type="text/css"
-              />
-              <link
-                rel="stylesheet"
-                href="https://www.etsy.com/dac/your/profile.20210909222603,modules/autosuggest.20210909222603,your-etsy.20220304135846,your/account/settings.20220304135846,modules/forms.20210909222603.css"
-                type="text/css"
-              />
-            </div>
-          </div>
-
-          <div className="container">
-            <div className="primary profile-edit">
-              <div className="your-etsy-header clear">
-                <h1>Your Public Profile</h1>
-                <p>Everything on this page can be seen by anyone</p>
-                <a className="view-profile btn-secondary small registration-hidden">
-                  View Profile
-                </a>
+                <link
+                  rel="stylesheet"
+                  href="https://www.etsy.com/dac/site-chrome/components/components.20220304135846,site-chrome/header/header.20220304135846,site-chrome/footer/footer.20220304135846,gdpr/settings-overlay.20220304135846.css"
+                  type="text/css"
+                />
+                <link
+                  rel="stylesheet"
+                  href="https://www.etsy.com/dac/your/profile.20210909222603,modules/autosuggest.20210909222603,your-etsy.20220304135846,your/account/settings.20220304135846,modules/forms.20210909222603.css"
+                  type="text/css"
+                />
               </div>
-              <form class="section-inner" encType="multipart/form-data">
-                <div class="input-group">
-                  <label class="label" for="avatar">
-                    Profile Picture
-                  </label>
-                  <div class="change-avatar-content">
-                    <input
-                      type="file"
-                      class="upload-new-avatar"
-                      id="avatar"
-                      name="ProfileImage"
-                      size="15"
-                      aria-describedby="changing-avatar-disabled avatar-technical-hint"
-                      onChange={handleChange}
-                    />
+            </div>
 
-                    <div class="image-wrapper user-avatar-wrapper">
-                      {profileImageData}
+            <div className="container">
+              <div className="primary profile-edit">
+                <div className="your-etsy-header clear">
+                  <h1>&nbsp; Your Public Profile</h1>
+                  <p>Everything on this page can be seen by anyone</p>
+                  <a className="view-profile btn-secondary small registration-hidden">
+                    View Profile
+                  </a>
+                </div>
+                <form class="section-inner" encType="multipart/form-data">
+                  <div class="input-group">
+                    <label class="label" for="avatar">
+                      Profile Picture
+                    </label>
+                    <div class="change-avatar-content">
+                      <input
+                        type="file"
+                        class="upload-new-avatar"
+                        id="avatar"
+                        name="ProfileImage"
+                        size="15"
+                        aria-describedby="changing-avatar-disabled avatar-technical-hint"
+                        onChange={handleChange}
+                      />
+
+                      <div class="image-wrapper user-avatar-wrapper">
+                        {profileImageData}
+                      </div>
+                    </div>
+
+                    <span class="inline-message" id="avatar-technical-hint">
+                      Must be a .jpg, .gif or .png file smaller than 10MB and at
+                      least 400px by 400px.
+                    </span>
+                  </div>
+                  <hr />
+
+                  <div class="input-group location-city">
+                    <label class="label" for="Phonenumber">
+                      Your Name
+                    </label>
+                    <div class="autosuggest-wrapper">
+                      <input
+                        aria-describedby="the_reason"
+                        type="text"
+                        autoComplete="off"
+                        name="Name"
+                        id="Name"
+                        placeholder={ProfileData.Name}
+                        value={formValue.Name}
+                        onChange={handleChange}
+                        class="text"
+                      />
                     </div>
                   </div>
-
-                  <span class="inline-message" id="avatar-technical-hint">
-                    Must be a .jpg, .gif or .png file smaller than 10MB and at
-                    least 400px by 400px.
-                  </span>
-                </div>
-                <hr />
-
-                <div class="input-group location-city">
-                  <label class="label" for="Phonenumber">
-                    Your Name
-                  </label>
-                  <div class="autosuggest-wrapper">
-                    <input
-                      aria-describedby="the_reason"
-                      type="text"
-                      autoComplete="off"
-                      name="Name"
-                      id="Name"
-                      placeholder={ProfileData.Name}
-                      value={formValue.Name}
-                      onChange={handleChange}
-                      class="text"
-                    />
-                  </div>
-                </div>
-                <hr />
-                <div class="input-group location-city">
-                  <label class="label" for="Email">
-                    Email
-                  </label>
-                  <div class="autosuggest-wrapper">
-                    <input
-                      aria-describedby="the_reason"
-                      type="text"
-                      autoComplete="off"
-                      name="Email"
-                      id="Email"
-                      placeholder={ProfileData.Email}
-                      value={formValue.Email}
-                      onChange={handleChange}
-                      class="text"
-                    />
-                  </div>
-                </div>
-                <hr />
-                <div class="input-group location-city">
-                  <label class="label" for="Phonenumber">
-                    Phone Number
-                  </label>
-                  <div class="autosuggest-wrapper">
-                    <input
-                      aria-describedby="the_reason"
-                      type="number"
-                      autoComplete="off"
-                      name="Phonenumber"
-                      id="Phonenumber"
-                      placeholder={ProfileData.Phonenumber}
-                      value={formValue.Phonenumber}
-                      onChange={handleChange}
-                      class="text"
-                    />
-                  </div>
-                </div>
-                <hr />
-                <fieldset>
-                  <div
-                    class="gender-class"
-                    role="group"
-                    aria-labelledby="gender-group-label"
-                  >
-                    <label class="label" id="gender-group-label">
-                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                      Gender
+                  <hr />
+                  <div class="input-group location-city">
+                    <label class="label" for="Email">
+                      Email
                     </label>
-                    {/* <div class="radio-group" id="gender"> */}
-                    <label for="female">
-                      &nbsp;Female
+                    <div class="autosuggest-wrapper">
                       <input
-                        type="radio"
-                        value="female"
-                        name="gender"
-                        id="female"
-                        // checked={formValue.Gender === "female"}
+                        aria-describedby="the_reason"
+                        type="text"
+                        autoComplete="off"
+                        name="Email"
+                        id="Email"
+                        placeholder={ProfileData.Email}
+                        value={formValue.Email}
+                        onChange={handleChange}
+                        class="text"
+                      />
+                    </div>
+                  </div>
+                  <hr />
+                  <div class="input-group location-city">
+                    <label class="label" for="Phonenumber">
+                      Phone Number
+                    </label>
+                    <div class="autosuggest-wrapper">
+                      <input
+                        aria-describedby="the_reason"
+                        type="number"
+                        autoComplete="off"
+                        name="Phonenumber"
+                        id="Phonenumber"
+                        placeholder={ProfileData.Phonenumber}
+                        value={formValue.Phonenumber}
+                        onChange={handleChange}
+                        class="text"
+                      />
+                    </div>
+                  </div>
+                  <hr />
+                  <fieldset>
+                    <div
+                      class="gender-class"
+                      role="group"
+                      aria-labelledby="gender-group-label"
+                    >
+                      <label class="label" id="gender-group-label">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        Gender
+                      </label>
+                      {/* <div class="radio-group" id="gender"> */}
+                      <label for="female">
+                        &nbsp;Female
+                        <input
+                          type="radio"
+                          value="female"
+                          name="gender"
+                          id="female"
+                          // checked={formValue.Gender === "female"}
+                          onChange={handleChange}
+                        />
+                      </label>
+                      <label for="male">
+                        &nbsp;Male
+                        <input
+                          type="radio"
+                          value="male"
+                          name="gender"
+                          id="male"
+                          // checked={formValue.Gender === "male"}
+                          onChange={handleChange}
+                        />
+                      </label>
+
+                      <label for="private">
+                        &nbsp;Rather not say
+                        <input
+                          type="radio"
+                          value="private"
+                          name="gender"
+                          id="private"
+                          // checked={formValue.Gender === "Rather not say"}
+                          onChange={handleChange}
+                        />
+                      </label>
+
+                      {/* </div> */}
+                    </div>
+                  </fieldset>
+                  <hr />
+                  <div class="input-group location-city">
+                    <label class="label" for="DOB">
+                      Date of Birth
+                    </label>
+                    <div class="autosuggest-wrapper">
+                      <input
+                        aria-describedby="the_reason"
+                        type="date"
+                        autoComplete="off"
+                        name="DOB"
+                        id="DOB"
+                        value={formValue.DOB}
                         onChange={handleChange}
                       />
+                    </div>
+                  </div>
+                  <hr />
+                  <div class="input-group location-city">
+                    <label class="label" for="Country">
+                      Address
                     </label>
-                    <label for="male">
-                      &nbsp;Male
+                    <div class="autosuggest-wrapper">
                       <input
-                        type="radio"
-                        value="male"
-                        name="gender"
-                        id="male"
-                        // checked={formValue.Gender === "male"}
+                        aria-describedby="the_reason"
+                        type="text"
+                        autoComplete="off"
+                        name="Address"
+                        id="Address"
+                        placeholder={ProfileData.Address}
+                        value={formValue.Address}
                         onChange={handleChange}
+                        class="text"
                       />
+                    </div>
+                  </div>
+                  <hr class="registration-hidden" />
+                  <div class="input-group location-city">
+                    <label class="label" for="city3">
+                      City
                     </label>
-
-                    <label for="private">
-                      &nbsp;Rather not say
+                    <div class="autosuggest-wrapper">
                       <input
-                        type="radio"
-                        value="private"
-                        name="gender"
-                        id="private"
-                        // checked={formValue.Gender === "Rather not say"}
+                        aria-describedby="the_reason"
+                        type="text"
+                        autoComplete="off"
+                        name="City"
+                        id="City"
+                        placeholder={ProfileData.City}
+                        value={formValue.City}
                         onChange={handleChange}
+                        class="text"
                       />
+                    </div>
+                  </div>
+                  <hr />
+                  <div class="input-group location-city">
+                    <label class="label" for="Country">
+                      Country
                     </label>
-
-                    {/* </div> */}
+                    <div class="autosuggest-wrapper">
+                      <input
+                        aria-describedby="the_reason"
+                        type="text"
+                        autoComplete="off"
+                        name="Country"
+                        id="Country"
+                        placeholder={ProfileData.Country}
+                        value={formValue.Country}
+                        onChange={handleChange}
+                        class="text"
+                      />
+                    </div>
                   </div>
-                </fieldset>
-                <hr />
-                <div class="input-group location-city">
-                  <label class="label" for="DOB">
-                    Date of Birth
-                  </label>
-                  <div class="autosuggest-wrapper">
+                  <div class="submit">
                     <input
-                      aria-describedby="the_reason"
-                      type="date"
-                      autoComplete="off"
-                      name="DOB"
-                      id="DOB"
-                      value={formValue.DOB}
-                      onChange={handleChange}
+                      class="btn-primary"
+                      type="submit"
+                      value="Save Changes"
+                      onClick={handleSubmit}
                     />
                   </div>
-                </div>
-                <hr />
-                <div class="input-group location-city">
-                  <label class="label" for="Country">
-                    Address
-                  </label>
-                  <div class="autosuggest-wrapper">
-                    <input
-                      aria-describedby="the_reason"
-                      type="text"
-                      autoComplete="off"
-                      name="Address"
-                      id="Address"
-                      placeholder={ProfileData.Address}
-                      value={formValue.Address}
-                      onChange={handleChange}
-                      class="text"
-                    />
-                  </div>
-                </div>
-                <hr class="registration-hidden" />
-                <div class="input-group location-city">
-                  <label class="label" for="city3">
-                    City
-                  </label>
-                  <div class="autosuggest-wrapper">
-                    <input
-                      aria-describedby="the_reason"
-                      type="text"
-                      autoComplete="off"
-                      name="City"
-                      id="City"
-                      placeholder={ProfileData.City}
-                      value={formValue.City}
-                      onChange={handleChange}
-                      class="text"
-                    />
-                  </div>
-                </div>
-                <hr />
-                <div class="input-group location-city">
-                  <label class="label" for="Country">
-                    Country
-                  </label>
-                  <div class="autosuggest-wrapper">
-                    <input
-                      aria-describedby="the_reason"
-                      type="text"
-                      autoComplete="off"
-                      name="Country"
-                      id="Country"
-                      placeholder={ProfileData.Country}
-                      value={formValue.Country}
-                      onChange={handleChange}
-                      class="text"
-                    />
-                  </div>
-                </div>
-                <div class="submit">
-                  <input
-                    class="btn-primary"
-                    type="submit"
-                    value="Save Changes"
-                    onClick={handleSubmit}
-                  />
-                </div>
-              </form>
+                </form>
+              </div>
             </div>
+            {/* </Col> */}
+            {/* </Row> */}
+            {/* </Container> */}
           </div>
-          {/* </Col> */}
-          {/* </Row> */}
-          {/* </Container> */}
+        </div>
+        <div className="footer--pin">
+          <Footer setcurrencyValue={setcurrencyValue} />
         </div>
       </div>
-      <div className="footer--pin">
-        <Footer setcurrencyValue={setcurrencyValue} />
-      </div>
-    </div>
+    </>
   );
 };
 export default Profile;
