@@ -3,7 +3,7 @@
 
 #### Working Demo
 
-[![qtype](https://youtu.be/OZZu1CEOS_w)
+[![qtype](https://i9.ytimg.com/vi_webp/OZZu1CEOS_w/mq1.webp?sqp=CMDf6aMG-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGGUgZChYMA8=&rs=AOn4CLBwOsF4JDW5sbiiiJjoOQu3sGLOmQ)](https://youtu.be/OZZu1CEOS_w)
 
 #### Front End:
 
